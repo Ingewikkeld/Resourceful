@@ -1,0 +1,12 @@
+web/bundles/
+app/config/parameters.yml
+app/bootstrap.php.cache
+build/
+vendor/
+bin/
+composer.phar
+.vagrant*
+.idea
+
+# Generated documentation
+docs/.build

@@ -1,0 +1,3 @@
+# /etc/apt/sources.list.d/dotdeb.org.list
+deb http://packages.dotdeb.org squeeze all
+deb-src http://packages.dotdeb.org squeeze all
