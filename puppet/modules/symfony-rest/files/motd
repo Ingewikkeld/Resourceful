@@ -17,6 +17,10 @@ Installation instructions:
 
    php composer.phar install
 
+4. Update database with schema
+
+   php app/console doctrine:schema:create
+
 Do not forget to add the URL 'dev.rest.com' to your hosts file; after the
 installation has completed you can visit that location to see your REST API.
 

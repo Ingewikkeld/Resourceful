@@ -1,6 +1,6 @@
 <?php
 
-namespace Ingewikkeld\oAuthServerBundle\Entity;
+namespace Ingewikkeld\Rest\oAuthServerBundle\Entity;
 
 use FOS\OAuthServerBundle\Entity\RefreshToken as BaseRefreshToken;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +24,7 @@ class RefreshToken extends BaseRefreshToken
     protected $client;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Blz1\ApiBundle\Entity\ApiUser")
+     * @ORM\ManyToOne(targetEntity="Ingewikkeld\Rest\UserBundle\Entity\User")
      */
     protected $user;
 }

@@ -4,17 +4,15 @@ jms_security_extra:
 
 security:
     encoders:
-        Symfony\Component\Security\Core\User\User: plaintext
+        FOS\UserBundle\Model\UserInterface: sha512
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     providers:
-        in_memory:
-            memory:
-                users:
-                    admin: { password: 'admin', roles: [ROLE_ADMIN] }
+        fos_userbundle:
+            id: fos_user.user_provider.username
 
     firewalls:
         dev:
@@ -25,9 +23,17 @@ security:
             pattern:  ^/oauth/v2/token
             security: false
 
-        oauth_authorize:
-            pattern:  ^/oauth/v2/auth
-            http_basic: ~
+#        oauth_authorize:
+#            pattern:    ^/oauth/v2/auth
+
+        restricted:
+            pattern: ^/oauth
+            form_login:
+                login_path:    /oauth/login
+                check_path:    /oauth/login_check
+                provider:      fos_userbundle
+            logout:       true
+            anonymous:    true
 
         api:
             pattern:  ^/api
@@ -35,4 +41,7 @@ security:
             stateless:  true
 
     access_control:
-        - { path: ^/api, roles: [ IS_AUTHENTICATED_FULLY ] }
+        - { path: ^/api,       roles: [ IS_AUTHENTICATED_FULLY ] }
+        - { path: ^/login$,    role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register,  role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }

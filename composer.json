@@ -20,6 +20,7 @@
         "jms/serializer-bundle": "dev-master",
         "jms/di-extra-bundle": "1.4.*",
         "friendsofsymfony/oauth-server-bundle": "dev-master",
+        "friendsofsymfony/user-bundle": "dev-master",
         "guzzle/guzzle": "~3.1",
         "keeguon/oauth2-php": ">=1.0.0",
         "doctrine/doctrine-migrations-bundle": "dev-master",

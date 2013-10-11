@@ -1,6 +1,6 @@
 <?php
 
-namespace Ingewikkeld\oAuthServerBundle\Entity;
+namespace Ingewikkeld\Rest\oAuthServerBundle\Entity;
 
 use FOS\OAuthServerBundle\Entity\AccessToken as BaseAccessToken;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +24,7 @@ class AccessToken extends BaseAccessToken
     protected $client;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Blz1\ApiBundle\Entity\ApiUser")
+     * @ORM\ManyToOne(targetEntity="Ingewikkeld\Rest\UserBundle\Entity\User")
      */
     protected $user;
 }

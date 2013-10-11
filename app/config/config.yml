@@ -67,16 +67,22 @@ swiftmailer:
 
 fos_oauth_server:
     db_driver:           orm
-    client_class:        Ingewikkeld\oAuthServerBundle\Entity\Client
-    access_token_class:  Ingewikkeld\oAuthServerBundle\Entity\AccessToken
-    refresh_token_class: Ingewikkeld\oAuthServerBundle\Entity\RefreshToken
-    auth_code_class:     Ingewikkeld\oAuthServerBundle\AuthCode
+    client_class:        Ingewikkeld\Rest\oAuthServerBundle\Entity\Client
+    access_token_class:  Ingewikkeld\Rest\oAuthServerBundle\Entity\AccessToken
+    refresh_token_class: Ingewikkeld\Rest\oAuthServerBundle\Entity\RefreshToken
+    auth_code_class:     Ingewikkeld\Rest\oAuthServerBundle\Entity\AuthCode
     service:
         options:
             supported_scopes: API
+        user_provider: fos_user.user_manager
 
 stof_doctrine_extensions:
     default_locale: en_US
     orm:
         default:
             timestampable: true
+
+fos_user:
+    db_driver:     orm
+    firewall_name: oauth_authorize
+    user_class:    Ingewikkeld\Rest\UserBundle\Entity\User

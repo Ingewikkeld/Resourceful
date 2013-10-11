@@ -1,14 +1,14 @@
 <?php
+namespace Ingewikkeld\Rest\UserBundle\Entity;
 
-namespace Ingewikkeld\Rest\oAuthServerBundle\Entity;
-
-use FOS\OAuthServerBundle\Entity\Client as BaseClient;
 use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Model\User as BaseUser;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="api_user")
  */
-class Client extends BaseClient
+class User extends BaseUser
 {
     /**
      * @ORM\Id

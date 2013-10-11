@@ -21,10 +21,13 @@ class AppKernel extends Kernel
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
-            new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+            new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
             new FOS\RestBundle\FOSRestBundle(),
-            new Acme\RestDemoBundle\AcmeRestDemoBundle()
+            new FOS\UserBundle\FOSUserBundle(),
+            new Ingewikkeld\Rest\oAuthServerBundle\IngewikkeldoAuthServerBundle(),
+            new Ingewikkeld\Rest\UserBundle\IngewikkeldRestUserBundle(),
+            new Acme\RestDemoBundle\AcmeRestDemoBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
