@@ -11,12 +11,23 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Translation\Translator;
 
 /**
- * @Route("/user")
+ * @Route("/user", service="ingewikkeld_rest_user.controller.default")
  */
-class DefaultController extends Controller
+class DefaultController
 {
+    protected $translator;
+
+    protected $userRepository;
+
+    public function __construct(Translator $translator, UserRepository $userRepository)
+    {
+        $this->translator     = $translator;
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * @Get("/")
      */
@@ -38,11 +49,12 @@ class DefaultController extends Controller
      */
     public function readAction($username)
     {
-        var_dump($this->getRequest()->getLocale());
         /** @var User $user */
         $user = $this->getRepository()->findOneByUsername($username);
         if (!$user) {
-            throw new NotFoundHttpException(sprintf('User with username "%s" could not be found', $username));
+            throw new NotFoundHttpException(
+                $this->getTranslator()->trans('error.user_not_found', array('%username%' => $username))
+            );
         }
 
         $resource = $this->createUserResource($user);
@@ -78,6 +90,16 @@ class DefaultController extends Controller
      */
     protected function getRepository()
     {
-        return $this->getDoctrine()->getRepository('IngewikkeldRestUserBundle:User');
+        return $this->userRepository;
+    }
+
+    /**
+     * Returns the translation object with which to Translate strings.
+     *
+     * @return Translator
+     */
+    protected function getTranslator()
+    {
+        return $this->translator;
     }
 }
