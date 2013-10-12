@@ -2,26 +2,35 @@
 
 namespace Ingewikkeld\Rest\UserBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Translation\Translator;
 use Hal\Resource;
 use Ingewikkeld\Rest\UserBundle\Entity\User;
 use Ingewikkeld\Rest\UserBundle\Entity\UserRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Get;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Translation\Translator;
 
 /**
  * @Route("/user", service="ingewikkeld_rest_user.controller.default")
  */
 class DefaultController
 {
+    /** @var Translator $translator */
     protected $translator;
 
+    /** @var UserRepository $userRepository */
     protected $userRepository;
 
+    /**
+     * Initializes this controller with a translator and appropriate repository.
+     *
+     * @param Translator     $translator
+     * @param UserRepository $userRepository
+     */
     public function __construct(Translator $translator, UserRepository $userRepository)
     {
         $this->translator     = $translator;
@@ -36,7 +45,7 @@ class DefaultController
         $resource = new Resource('/api/user');
 
         /** @var User[] $users */
-        $users = $this->getRepository()->findAll();
+        $users = $this->userRepository->findAll();
         foreach ($users as $user) {
             $resource->setEmbedded('user', $this->createUserResource($user));
         }
@@ -47,13 +56,13 @@ class DefaultController
     /**
      * @Get("/{username}")
      */
-    public function readAction($username)
+    public function readAction(Request $request)
     {
         /** @var User $user */
-        $user = $this->getRepository()->findOneByUsername($username);
+        $user = $this->userRepository->findOneByUsername($request->get('username'));
         if (!$user) {
             throw new NotFoundHttpException(
-                $this->getTranslator()->trans('error.user_not_found', array('%username%' => $username))
+                $this->translator->trans('error.user_not_found', array('%username%' => $request->get('username')))
             );
         }
 
@@ -81,25 +90,5 @@ class DefaultController
         );
 
         return $resource;
-    }
-
-    /**
-     * Returns the repository for the user object.
-     *
-     * @return UserRepository
-     */
-    protected function getRepository()
-    {
-        return $this->userRepository;
-    }
-
-    /**
-     * Returns the translation object with which to Translate strings.
-     *
-     * @return Translator
-     */
-    protected function getTranslator()
-    {
-        return $this->translator;
     }
 }
