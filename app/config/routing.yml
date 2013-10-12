@@ -1,7 +1,6 @@
-ingewikkeld_rest_user:
-    resource: "@IngewikkeldRestUserBundle/Controller/"
-    type:     annotation
-    prefix:   /
+api:
+    resource: routing_api.yml
+    prefix:   /api
 
 fos_oauth_server_token:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"

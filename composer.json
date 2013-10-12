@@ -26,7 +26,8 @@
         "doctrine/doctrine-migrations-bundle": "dev-master",
         "stof/doctrine-extensions-bundle":     "~1.1@dev",
         "zircote/hal": "dev-master",
-        "friendsofsymfony/rest-bundle": "dev-master"
+        "friendsofsymfony/rest-bundle": "dev-master",
+        "lunetics/locale-bundle": "2.2.*"
     },
     "scripts": {
         "post-install-cmd": [

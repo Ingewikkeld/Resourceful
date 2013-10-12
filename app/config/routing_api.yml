@@ -1,0 +1,3 @@
+ingewikkeld_rest_user:
+    resource: "@IngewikkeldRestUserBundle/Controller/"
+    type:     annotation

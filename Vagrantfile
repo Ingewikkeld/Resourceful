@@ -11,7 +11,7 @@ Vagrant::Config.run do |config|
 
     config.vm.customize [
         'modifyvm', :id, '--chipset', 'ich9', # solves kernel panic issue on some host machines
-        '--pae', 'on', '--uart1', 'off', '--memory', '1024'
+        '--pae', 'on', '--uart1', 'off', '--memory', '2048'
     ]
 
     # Ensure nfs is used as filesystem for darwin and linux hosts
