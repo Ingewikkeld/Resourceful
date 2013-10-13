@@ -110,7 +110,7 @@ class ClientController
         }
 
         /** @var Client $client */
-        $client = $this->getRepository()->findByOneId($request->get('id'));
+        $client = $this->getRepository()->findOneById($request->get('id'));
         $client->setRedirectUris($request->get('redirectUris'));
         $client->setAllowedGrantTypes($request->get('grants'));
         $this->entityManager->persist($client);
