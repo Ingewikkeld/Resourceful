@@ -23,9 +23,9 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Delete;
 
 /**
- * @Route("/user", service="ingewikkeld_rest_oauth_server_client.controller.default")
+ * @Route("/client", service="ingewikkeld_rest_oauth_server.controller.client")
  */
-class DefaultController
+class ClientController
 {
     /** @var TranslatorInterface $translator */
     protected $translator;

@@ -1,14 +1,18 @@
 <?php
-/**
- * RestDistribution
- */
-
 namespace Ingewikkeld\Rest\OAuthServerBundle\Resource;
 
+use Doctrine\ORM\EntityManager;
 use Ingewikkeld\Rest\OAuthServerBundle\Entity\Client as ClientEntity;
 
 class Client
 {
+    public $entityManager;
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @return ClientEntity
      */
@@ -51,6 +55,7 @@ class Client
      */
     public function findAll()
     {
-        return array();
+        $repo = $this->entityManager->getRepository('IngewikkeldRestOAuthServerBundle:Client');
+        return $repo->findAll();
     }
 }
