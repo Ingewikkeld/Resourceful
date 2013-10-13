@@ -1,3 +1,7 @@
 ingewikkeld_rest_user:
     resource: "@IngewikkeldRestUserBundle/Controller/"
     type:     annotation
+
+ingewikkeld_rest_oauth_server:
+    resource: "@IngewikkeldRestOAuthServerBundle/Controller/"
+    type:     annotation

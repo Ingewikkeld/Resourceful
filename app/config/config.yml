@@ -67,10 +67,10 @@ swiftmailer:
 
 fos_oauth_server:
     db_driver:           orm
-    client_class:        Ingewikkeld\Rest\oAuthServerBundle\Entity\Client
-    access_token_class:  Ingewikkeld\Rest\oAuthServerBundle\Entity\AccessToken
-    refresh_token_class: Ingewikkeld\Rest\oAuthServerBundle\Entity\RefreshToken
-    auth_code_class:     Ingewikkeld\Rest\oAuthServerBundle\Entity\AuthCode
+    client_class:        Ingewikkeld\Rest\OAuthServerBundle\Entity\Client
+    access_token_class:  Ingewikkeld\Rest\OAuthServerBundle\Entity\AccessToken
+    refresh_token_class: Ingewikkeld\Rest\OAuthServerBundle\Entity\RefreshToken
+    auth_code_class:     Ingewikkeld\Rest\OAuthServerBundle\Entity\AuthCode
     service:
         options:
             supported_scopes: API

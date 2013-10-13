@@ -1,6 +1,6 @@
 <?php
 
-namespace Ingewikkeld\Rest\oAuthServerBundle\Entity;
+namespace Ingewikkeld\Rest\OAuthServerBundle\Entity;
 
 use FOS\OAuthServerBundle\Entity\Client as BaseClient;
 use Doctrine\ORM\Mapping as ORM;

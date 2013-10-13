@@ -1,9 +1,9 @@
 <?php
 
-namespace Ingewikkeld\Rest\UserBundle\Controller;
+namespace Ingewikkeld\Rest\OAuthServerBundle\Controller;
 
-use FOS\UserBundle\Model\UserManagerInterface;
-use Ingewikkeld\Rest\UserBundle\Form\UserType;
+use FOS\OAuthServerBundle\Model\Client;
+use Ingewikkeld\Rest\OAuthServerBundle\Resource\Client as ClientResource;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +14,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Hal\Resource;
-use Ingewikkeld\Rest\UserBundle\Entity\User;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -24,7 +23,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Delete;
 
 /**
- * @Route("/user", service="ingewikkeld_rest_user.controller.default")
+ * @Route("/user", service="ingewikkeld_rest_oauth_server_client.controller.default")
  */
 class DefaultController
 {
@@ -34,8 +33,8 @@ class DefaultController
     /** @var FormFactoryInterface $formFactory */
     protected $formFactory;
 
-    /** @var UserManagerInterface */
-    protected $userManager;
+    /** @var ClientResource $clientResource */
+    protected $clientResource;
 
     /** @var RouterInterface */
     protected $router;
@@ -45,78 +44,76 @@ class DefaultController
      *
      * @param TranslatorInterface  $translator
      * @param FormFactoryInterface $formFactory
-     * @param UserManagerInterface $userManager
+     * @param ClientResource        $clientResource
      * @param RouterInterface      $router
      */
     public function __construct(
         TranslatorInterface  $translator,
         FormFactoryInterface $formFactory,
-        UserManagerInterface $userManager,
+        ClientResource       $clientResource,
         RouterInterface      $router
     ) {
-        $this->translator    = $translator;
-        $this->formFactory   = $formFactory;
-        $this->userManager   = $userManager;
-        $this->router        = $router;
+        $this->translator     = $translator;
+        $this->formFactory    = $formFactory;
+        $this->clientResource = $clientResource;
+        $this->router         = $router;
     }
 
     /**
-     * @Get("/", name="ingewikkeld_rest_userbundle_browse")
+     * @Get("/", name="ingewikkeld_rest_oauth_server_client_browse")
      */
     public function browseAction()
     {
-        /** @var User[] $users */
-        $users = $this->userManager->findUsers();
+        /** @var Client[] $collection */
+        $collection = $this->clientResource->findAll();
 
         $resource = new Resource(
-            $this->generateUrl('ingewikkeld_rest_userbundle_browse'),
-            array(
-                'count' => count($users)
-            )
+            $this->generateUrl('ingewikkeld_rest_oauth_server_client_browse'),
+            array('count' => count($collection))
         );
 
-        foreach ($users as $user) {
-            $resource->setEmbedded('user', $this->createUserResource($user));
+        foreach ($collection as $element) {
+            $resource->setEmbedded('client', $this->createResource($element));
         }
 
         return new Response((string)$resource);
     }
 
     /**
-     * @Get("/{username}", name="ingewikkeld_rest_userbundle_read")
+     * @Get("/{id}", name="ingewikkeld_rest_oauth_server_client_read")
      */
     public function readAction(Request $request)
     {
-        /** @var User $user */
-        $user = $this->userManager->findUserByUsername($request->get('username'));
-        if (!$user) {
+        /** @var Client $client */
+        $client = $this->clientResource->findBy('id', $request->get('id'));
+        if (!$client) {
             throw new NotFoundHttpException(
-                $this->translator->trans('error.user_not_found', array('%username%' => $request->get('username')))
+                $this->translator->trans('error.client_not_found', array('%id%' => $request->get('id')))
             );
         }
 
-        return new Response((string)$this->createUserResource($user));
+        return new Response((string)$this->createResource($client));
     }
 
     /**
      * @param Request $request
      *
-     * @Put("/{username}", name="ingewikkeld_rest_userbundle_edit")
+     * @Put("/{username}", name="ingewikkeld_rest_oauth_server_client_edit")
      */
     public function editAction(Request $request)
     {
-        $form = $this->createUserForm();
+        $form = $this->createForm();
         $form->submit($request->request->all());
         if (!$form->isValid()) {
             throw new BadRequestHttpException($form->getErrorsAsString());
         }
 
-        $user = $this->userManager->findUserByUsername($request->get('username'));
-        $user->setUsername($request->get('username'));
-        $user->setEmail($request->get('email'));
-        $user->setPlainPassword($request->get('password'));
-        $user->setEnabled(true);
-        $this->userManager->updateUser($user);
+        $client = $this->clientResource->findById($request->get('id'));
+//        $user->setUsername($request->get('username'));
+//        $user->setEmail($request->get('email'));
+//        $user->setPlainPassword($request->get('password'));
+//        $user->setEnabled(true);
+        $this->clientResource->update($client);
 
         return new Response();
     }
@@ -124,29 +121,29 @@ class DefaultController
     /**
      * @param Request $request
      *
-     * @Post("/", name="ingewikkeld_rest_userbundle_add")
+     * @Post("/", name="ingewikkeld_rest_oauth_server_client_add")
      */
     public function addAction(Request $request)
     {
-        $form = $this->createUserForm();
+        $form = $this->createForm();
         $form->submit($request->request->all());
         if (!$form->isValid()) {
             throw new BadRequestHttpException($form->getErrorsAsString());
         }
 
-        $user = $this->userManager->createUser();
-        $user->setUsername($request->get('username'));
-        $user->setEmail($request->get('email'));
-        $user->setPlainPassword($request->get('password'));
-        $user->setEnabled(true);
-        $this->userManager->updateUser($user);
+        $client = $this->clientResource->create();
+//        $user->setUsername($request->get('username'));
+//        $user->setEmail($request->get('email'));
+//        $user->setPlainPassword($request->get('password'));
+//        $user->setEnabled(true);
+        $this->clientResource->update($client);
 
         return new Response(
             '',
             201,
             array(
                  'Location' => $this->generateUrl(
-                     'ingewikkeld_rest_userbundle_read', array('username' => $user->getUsernameCanonical())
+                     'ingewikkeld_rest_userbundle_read', array('id' => $client->getId())
                  )
             )
         );
@@ -155,37 +152,37 @@ class DefaultController
     /**
      * @param Request $request
      *
-     * @Delete("/{username}", name="ingewikkeld_rest_userbundle_delete")
+     * @Delete("/{id}", name="ingewikkeld_rest_oauth_server_client_delete")
      */
     public function deleteAction(Request $request)
     {
-        $user = $this->userManager->findUserByUsername($request->get('username'));
+        $user = $this->clientResource->findBy('id', $request->get('id'));
         if (!$user) {
             throw new NotFoundHttpException(
-                $this->translator->trans('error.user_not_found', array('%username%' => $request->get('username')))
+                $this->translator->trans('error.client_not_found', array('%username%' => $request->get('username')))
             );
         }
 
-        $this->userManager->deleteUser($user);
+        $this->clientResource->deleteUser($user);
 
         return new Response('', 204);
     }
 
     /**
-     * Create a Resource to be returned by the API based on a User entity.
+     * Create a Resource to be returned by the API based on a entity.
      *
-     * @param User $user
+     * @param Client $client
      *
      * @return Resource
      */
-    protected function createUserResource(User $user)
+    protected function createResource(Client $client)
     {
         $resource = new Resource(
-            $this->generateUrl('ingewikkeld_rest_userbundle_read', array('username' => $user->getUsernameCanonical())),
+            $this->generateUrl('ingewikkeld_rest_oauth_server_client_read', array('id' => $client->getId())),
             array(
-                'username'   => $user->getUsername(),
-                'email'      => $user->getEmail(),
-                'last_login' => $user->getLastLogin() ? $user->getLastLogin()->format('c') : null,
+//                'username'   => $client->getUsername(),
+//                'email'      => $client->getEmail(),
+//                'last_login' => $client->getLastLogin() ? $client->getLastLogin()->format('c') : null,
             )
         );
 
@@ -214,8 +211,8 @@ class DefaultController
      *
      * @return FormInterface
      */
-    protected function createUserForm()
+    protected function createForm()
     {
-        return $this->formFactory->create(new UserType());
+        return $this->formFactory->create(new ClientType());
     }
 }

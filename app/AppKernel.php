@@ -26,7 +26,7 @@ class AppKernel extends Kernel
             new FOS\RestBundle\FOSRestBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Lunetics\LocaleBundle\LuneticsLocaleBundle(),
-            new Ingewikkeld\Rest\oAuthServerBundle\IngewikkeldoAuthServerBundle(),
+            new Ingewikkeld\Rest\OAuthServerBundle\IngewikkeldRestOAuthServerBundle(),
             new Ingewikkeld\Rest\UserBundle\IngewikkeldRestUserBundle(),
             new Acme\RestDemoBundle\AcmeRestDemoBundle(),
         );

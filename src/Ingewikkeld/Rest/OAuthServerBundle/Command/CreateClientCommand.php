@@ -3,10 +3,9 @@
  * RestDistribution
  */
 
-namespace Ingewikkeld\Rest\oAuthServerBundle\Command;
+namespace Ingewikkeld\Rest\OAuthServerBundle\Command;
 
-
-use Ingewikkeld\Rest\oAuthServerBundle\Entity\Client;
+use Ingewikkeld\Rest\OAuthServerBundle\Entity\Client;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
