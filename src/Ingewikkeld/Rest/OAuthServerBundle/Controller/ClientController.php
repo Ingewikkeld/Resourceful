@@ -2,8 +2,9 @@
 
 namespace Ingewikkeld\Rest\OAuthServerBundle\Controller;
 
-use FOS\OAuthServerBundle\Model\Client;
-use Ingewikkeld\Rest\OAuthServerBundle\Resource\Client as ClientResource;
+use Doctrine\ORM\EntityManager;
+use Ingewikkeld\Rest\OAuthServerBundle\Entity\Client;
+use Ingewikkeld\Rest\OAuthServerBundle\Form\ClientType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,8 +34,8 @@ class ClientController
     /** @var FormFactoryInterface $formFactory */
     protected $formFactory;
 
-    /** @var ClientResource $clientResource */
-    protected $clientResource;
+    /** @var EntityManager $entityManager */
+    protected $entityManager;
 
     /** @var RouterInterface */
     protected $router;
@@ -44,19 +45,19 @@ class ClientController
      *
      * @param TranslatorInterface  $translator
      * @param FormFactoryInterface $formFactory
-     * @param ClientResource        $clientResource
+     * @param EntityManager        $entityManager
      * @param RouterInterface      $router
      */
     public function __construct(
         TranslatorInterface  $translator,
         FormFactoryInterface $formFactory,
-        ClientResource       $clientResource,
+        EntityManager        $entityManager,
         RouterInterface      $router
     ) {
-        $this->translator     = $translator;
-        $this->formFactory    = $formFactory;
-        $this->clientResource = $clientResource;
-        $this->router         = $router;
+        $this->translator    = $translator;
+        $this->formFactory   = $formFactory;
+        $this->entityManager = $entityManager;
+        $this->router        = $router;
     }
 
     /**
@@ -65,7 +66,7 @@ class ClientController
     public function browseAction()
     {
         /** @var Client[] $collection */
-        $collection = $this->clientResource->findAll();
+        $collection = $this->getRepository()->findAll();
 
         $resource = new Resource(
             $this->generateUrl('ingewikkeld_rest_oauth_server_client_browse'),
@@ -85,7 +86,7 @@ class ClientController
     public function readAction(Request $request)
     {
         /** @var Client $client */
-        $client = $this->clientResource->findBy('id', $request->get('id'));
+        $client = $this->getRepository()->findOneById($request->get('id'));
         if (!$client) {
             throw new NotFoundHttpException(
                 $this->translator->trans('error.client_not_found', array('%id%' => $request->get('id')))
@@ -108,12 +109,12 @@ class ClientController
             throw new BadRequestHttpException($form->getErrorsAsString());
         }
 
-        $client = $this->clientResource->findById($request->get('id'));
-//        $user->setUsername($request->get('username'));
-//        $user->setEmail($request->get('email'));
-//        $user->setPlainPassword($request->get('password'));
-//        $user->setEnabled(true);
-        $this->clientResource->update($client);
+        /** @var Client $client */
+        $client = $this->getRepository()->findByOneId($request->get('id'));
+        $client->setRedirectUris($request->get('redirectUris'));
+        $client->setAllowedGrantTypes($request->get('grants'));
+        $this->entityManager->persist($client);
+        $this->entityManager->flush();
 
         return new Response();
     }
@@ -131,19 +132,18 @@ class ClientController
             throw new BadRequestHttpException($form->getErrorsAsString());
         }
 
-        $client = $this->clientResource->create();
-//        $user->setUsername($request->get('username'));
-//        $user->setEmail($request->get('email'));
-//        $user->setPlainPassword($request->get('password'));
-//        $user->setEnabled(true);
-        $this->clientResource->update($client);
+        $client = new Client();
+        $client->setRedirectUris($request->get('redirectUris'));
+        $client->setAllowedGrantTypes($request->get('grants'));
+        $this->entityManager->persist($client);
+        $this->entityManager->flush();
 
         return new Response(
             '',
             201,
             array(
                  'Location' => $this->generateUrl(
-                     'ingewikkeld_rest_userbundle_read', array('id' => $client->getId())
+                     'ingewikkeld_rest_oauth_server_client_read', array('id' => $client->getId())
                  )
             )
         );
@@ -156,14 +156,14 @@ class ClientController
      */
     public function deleteAction(Request $request)
     {
-        $user = $this->clientResource->findBy('id', $request->get('id'));
-        if (!$user) {
+        $client = $this->getRepository()->findById($request->get('id'));
+        if (!$client) {
             throw new NotFoundHttpException(
-                $this->translator->trans('error.client_not_found', array('%username%' => $request->get('username')))
+                $this->translator->trans('error.client_not_found', array('%id%' => $request->get('id')))
             );
         }
 
-        $this->clientResource->deleteUser($user);
+        $this->entityManager->remove($client);
 
         return new Response('', 204);
     }
@@ -180,9 +180,10 @@ class ClientController
         $resource = new Resource(
             $this->generateUrl('ingewikkeld_rest_oauth_server_client_read', array('id' => $client->getId())),
             array(
-//                'username'   => $client->getUsername(),
-//                'email'      => $client->getEmail(),
-//                'last_login' => $client->getLastLogin() ? $client->getLastLogin()->format('c') : null,
+                 'publicId'     => $client->getPublicId(),
+                 'secret'       => $client->getSecret(),
+                 'redirectUris' => $client->getRedirectUris(),
+                 'grants'       => $client->getAllowedGrantTypes(),
             )
         );
 
@@ -214,5 +215,18 @@ class ClientController
     protected function createForm()
     {
         return $this->formFactory->create(new ClientType());
+    }
+
+    /**
+     *
+     *
+     *
+     * @return \Doctrine\ORM\EntityRepository
+     */
+    protected function getRepository()
+    {
+        $repo = $this->entityManager->getRepository('IngewikkeldRestOAuthServerBundle:Client');
+
+        return $repo;
     }
 }
