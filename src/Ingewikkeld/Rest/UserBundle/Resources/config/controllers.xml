@@ -11,7 +11,9 @@
     <services>
         <service id="ingewikkeld_rest_user.controller.default" class="%ingewikkeld_rest_user.controller.default.class%">
             <argument type="service" id="translator" />
-            <argument type="service" id="ingewikkeld_rest_user.repository.user" />
+            <argument type="service" id="form.factory" />
+            <argument type="service" id="fos_user.user_manager" />
+            <argument type="service" id="router" />
         </service>
     </services>
 </container>

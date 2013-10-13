@@ -2,50 +2,79 @@
 
 namespace Ingewikkeld\Rest\UserBundle\Controller;
 
+use FOS\UserBundle\Model\UserManagerInterface;
+use Ingewikkeld\Rest\UserBundle\Form\UserType;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Hal\Resource;
 use Ingewikkeld\Rest\UserBundle\Entity\User;
-use Ingewikkeld\Rest\UserBundle\Entity\UserRepository;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Controller\Annotations\Delete;
 
 /**
  * @Route("/user", service="ingewikkeld_rest_user.controller.default")
  */
 class DefaultController
 {
-    /** @var Translator $translator */
+    /** @var TranslatorInterface $translator */
     protected $translator;
 
-    /** @var UserRepository $userRepository */
-    protected $userRepository;
+    /** @var FormFactoryInterface $formFactory */
+    protected $formFactory;
+
+    /** @var UserManagerInterface */
+    protected $userManager;
+
+    /** @var RouterInterface */
+    protected $router;
 
     /**
-     * Initializes this controller with a translator and appropriate repository.
+     * Initializes this controller with a translator and Doctrine EntityManager.
      *
-     * @param Translator     $translator
-     * @param UserRepository $userRepository
+     * @param TranslatorInterface  $translator
+     * @param FormFactoryInterface $formFactory
+     * @param UserManagerInterface $userManager
+     * @param RouterInterface      $router
      */
-    public function __construct(Translator $translator, UserRepository $userRepository)
-    {
-        $this->translator     = $translator;
-        $this->userRepository = $userRepository;
+    public function __construct(
+        TranslatorInterface  $translator,
+        FormFactoryInterface $formFactory,
+        UserManagerInterface $userManager,
+        RouterInterface      $router
+    ) {
+        $this->translator    = $translator;
+        $this->formFactory   = $formFactory;
+        $this->userManager   = $userManager;
+        $this->router        = $router;
     }
 
     /**
-     * @Get("/")
+     * @Get("/", name="ingewikkeld_rest_userbundle_browse")
      */
-    public function indexAction()
+    public function browseAction()
     {
-        $resource = new Resource('/api/user');
-
         /** @var User[] $users */
-        $users = $this->userRepository->findAll();
+        $users = $this->userManager->findUsers();
+
+        $resource = new Resource(
+            $this->generateUrl('ingewikkeld_rest_userbundle_browse'),
+            array(
+                'count' => count($users)
+            )
+        );
+
         foreach ($users as $user) {
             $resource->setEmbedded('user', $this->createUserResource($user));
         }
@@ -54,21 +83,92 @@ class DefaultController
     }
 
     /**
-     * @Get("/{username}")
+     * @Get("/{username}", name="ingewikkeld_rest_userbundle_read")
      */
     public function readAction(Request $request)
     {
         /** @var User $user */
-        $user = $this->userRepository->findOneByUsername($request->get('username'));
+        $user = $this->userManager->findUserByUsername($request->get('username'));
         if (!$user) {
             throw new NotFoundHttpException(
                 $this->translator->trans('error.user_not_found', array('%username%' => $request->get('username')))
             );
         }
 
-        $resource = $this->createUserResource($user);
+        return new Response((string)$this->createUserResource($user));
+    }
 
-        return new Response((string)$resource);
+    /**
+     * @param Request $request
+     *
+     * @Put("/{username}", name="ingewikkeld_rest_userbundle_edit")
+     */
+    public function editAction(Request $request)
+    {
+        $form = $this->createUserForm();
+        $form->submit($request->request->all());
+        if (!$form->isValid()) {
+            throw new BadRequestHttpException($form->getErrorsAsString());
+        }
+
+        $user = $this->userManager->findUserByUsername($request->get('username'));
+        $user->setUsername($request->get('username'));
+        $user->setEmail($request->get('email'));
+        $user->setPlainPassword($request->get('password'));
+        $user->setEnabled(true);
+        $this->userManager->updateUser($user);
+
+        return new Response();
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @Post("/", name="ingewikkeld_rest_userbundle_add")
+     */
+    public function addAction(Request $request)
+    {
+        $form = $this->createUserForm();
+        $form->submit($request->request->all());
+        if (!$form->isValid()) {
+            throw new BadRequestHttpException($form->getErrorsAsString());
+        }
+
+        $user = $this->userManager->createUser();
+        $user->setUsername($request->get('username'));
+        $user->setEmail($request->get('email'));
+        $user->setPlainPassword($request->get('password'));
+        $user->setEnabled(true);
+        $this->userManager->updateUser($user);
+
+        return new Response(
+            '',
+            201,
+            array(
+                 'Location' => $this->generateUrl(
+                     'ingewikkeld_rest_userbundle_read', array('username' => $user->getUsernameCanonical())
+                 )
+            )
+        );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @Delete("/{username}", name="ingewikkeld_rest_userbundle_delete")
+     */
+    public function deleteAction(Request $request)
+    {
+        $user = $this->userManager->findUserByUsername($request->get('username'));
+        if (!$user) {
+            throw new NotFoundHttpException(
+                $this->translator->trans('error.user_not_found', array('%username%' => $request->get('username')))
+            );
+        }
+
+        $this->userManager->deleteUser($user);
+
+        return new Response('', 204);
     }
 
     /**
@@ -81,14 +181,41 @@ class DefaultController
     protected function createUserResource(User $user)
     {
         $resource = new Resource(
-            '/api/user/' . $user->getUsername(),
+            $this->generateUrl('ingewikkeld_rest_userbundle_read', array('username' => $user->getUsernameCanonical())),
             array(
                 'username'   => $user->getUsername(),
                 'email'      => $user->getEmail(),
-                'last_login' => $user->getLastLogin()->format('c'),
+                'last_login' => $user->getLastLogin() ? $user->getLastLogin()->format('c') : null,
             )
         );
 
         return $resource;
+    }
+
+    /**
+     * Generates a, by default relative, URL given a routename.
+     *
+     * @param string   $routeName     The name of the route for which to generate a URL.
+     * @param string[] $parameters    A list of parameters to use in the URL.
+     * @param string   $referenceType What type of URL to generate, one of the constants in {@see UrlGeneratorInterface}.
+     *
+     * @return string
+     */
+    protected function generateUrl(
+        $routeName,
+        $parameters = array(),
+        $referenceType = UrlGeneratorInterface::RELATIVE_PATH
+    ) {
+        return $this->router->generate($routeName, $parameters, $referenceType);
+    }
+
+    /**
+     * Creates a new form to use with the user.
+     *
+     * @return FormInterface
+     */
+    protected function createUserForm()
+    {
+        return $this->formFactory->create(new UserType());
     }
 }
