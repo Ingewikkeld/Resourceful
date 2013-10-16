@@ -1,31 +1,38 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant::Config.run do |config|
-    config.vm.host_name = "dev.rest.com"
-    config.vm.network :hostonly, "192.168.43.43"
-    config.vm.forward_port 80, 8080
+Vagrant.configure("2") do |config|
 
-    config.vm.box     = "precise64"
-    config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  # Every Vagrant virtual environment requires a box to build off of.
+  config.vm.box = "precise64"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
-    config.vm.customize [
-        'modifyvm', :id, '--chipset', 'ich9', # solves kernel panic issue on some host machines
-        '--pae', 'on', '--uart1', 'off', '--memory', '2048'
+  # Networking
+  config.vm.network "private_network", ip: "192.168.43.43"
+  config.vm.network "forwarded_port",  guest: 80, host: 8080
+  config.vm.hostname = "dev.rest.com"
+  config.ssh.forward_agent = true
+
+  config.vm.synced_folder "./", "/vagrant", id: "vagrant-root", nfs: (RUBY_PLATFORM =~ /linux/ or RUBY_PLATFORM =~ /darwin/)
+
+  config.vm.provider :virtualbox do |vb|
+    # Use VBoxManage to customize the VM.
+    vb.customize [
+      'modifyvm', :id,
+        '--chipset', 'ich9', # solves kernel panic issue on some host machines
+        '--pae', 'on',
+        '--uart1', 'off',
+        '--memory', '2048'
     ]
+  end
 
-    # Ensure nfs is used as filesystem for darwin and linux hosts
-    config.vm.share_folder(
-        "vagrant-root",
-        "/vagrant",
-        ".",
-        :nfs => (RUBY_PLATFORM =~ /linux/ or RUBY_PLATFORM =~ /darwin/)
-    )
-
-    config.vm.provision :shell, :path => "puppet/init.sh"
-    config.vm.provision :puppet do |puppet|
-       puppet.module_path    = "puppet/modules"
-       puppet.manifests_path = "puppet/manifests"
-       puppet.manifest_file  = "symfony-rest.pp"
-    end
+  config.vm.provision :shell, :path => "puppet/init.sh"
+  config.vm.provision :puppet do |puppet|
+    puppet.manifests_path = "puppet/manifests"
+    puppet.module_path    = "puppet/modules"
+    puppet.manifest_file  = "symfony-rest.pp"
+    puppet.facter = {
+        'fqdn' => config.vm.hostname
+    }
+  end
 end
