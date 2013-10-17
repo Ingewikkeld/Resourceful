@@ -88,6 +88,8 @@ class Client
         if ($resourceOrIdentifier instanceof HalResource) {
             $data = $resourceOrIdentifier->getData();
             $id = $data['id'];
+        } else {
+            $id = $resourceOrIdentifier;
         }
 
         return $this->router->generate(
