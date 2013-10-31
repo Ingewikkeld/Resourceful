@@ -30,4 +30,9 @@ class symfony-rest {
         group  => "vagrant",
         mode  => 0664
     }
+
+    file { "/vagrant/app/config/parameters.yml":
+        source  => "/vagrant/app/config/parameters.yml-dist",
+        replace => false,
+    }
 }
