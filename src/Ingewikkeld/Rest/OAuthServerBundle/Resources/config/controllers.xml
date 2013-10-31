@@ -6,31 +6,31 @@
 
     <parameters>
         <parameter key="ingewikkeld_rest_oauth_server.controller.client.class">Ingewikkeld\Rest\OAuthServerBundle\Controller\ClientController</parameter>
-        <parameter key="ingewikkeld_rest_oauth_server.resource.factory.client.class">Ingewikkeld\Rest\OAuthServerBundle\Resource\Factory\Client</parameter>
+        <parameter key="ingewikkeld_rest_oauth_server.resource.provider.client.class">Ingewikkeld\Rest\OAuthServerBundle\Resource\Provider\Client</parameter>
         <parameter key="ingewikkeld_rest_oauth_server.resource.mapper.client.class">Ingewikkeld\Rest\OAuthServerBundle\Resource\Mapper\Client</parameter>
     </parameters>
 
     <services>
-        <service abstract="true" id="ingewikkeld_rest.resource.factory">
+        <service abstract="true" id="ingewikkeld_rest.resource.provider">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="router"/>
             <argument type="service" id="translator"/>
         </service>
 
         <service
-            id="ingewikkeld_rest_oauth_server.resource.factory.client"
-            class="%ingewikkeld_rest_oauth_server.resource.factory.client.class%"
-            parent="ingewikkeld_rest.resource.factory" />
+            id="ingewikkeld_rest_oauth_server.resource.provider.client"
+            class="%ingewikkeld_rest_oauth_server.resource.provider.client.class%"
+            parent="ingewikkeld_rest.resource.provider" />
 
         <service id="ingewikkeld_rest_oauth_server.resource.mapper.client" class="%ingewikkeld_rest_oauth_server.resource.mapper.client.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="translator"/>
-            <argument type="service" id="ingewikkeld_rest_oauth_server.resource.factory.client"/>
+            <argument type="service" id="ingewikkeld_rest_oauth_server.resource.provider.client"/>
         </service>
 
         <service id="ingewikkeld_rest_oauth_server.controller.client" class="%ingewikkeld_rest_oauth_server.controller.client.class%">
             <argument type="service" id="form.factory" />
-            <argument type="service" id="ingewikkeld_rest_oauth_server.resource.factory.client"/>
+            <argument type="service" id="ingewikkeld_rest_oauth_server.resource.provider.client"/>
             <argument type="service" id="ingewikkeld_rest_oauth_server.resource.mapper.client" />
         </service>
     </services>

@@ -1,19 +1,27 @@
 <?php
 namespace Ingewikkeld\Rest\OAuthServerBundle\Form;
 
+use Ingewikkeld\Rest\Resource\FormTypeInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ClientType extends AbstractType
+class ClientType extends AbstractType implements FormTypeInterface
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('redirectUris', 'text', array('constraints' => array(new NotBlank())))
-            ->add('grants', 'text');
+            ->add('redirectUris', 'collection', array('type' => 'url'))
+            ->add(
+                'grants',
+                'choice',
+                array(
+                     'choices' => array(
+                         'token' => 'token',
+                         'authorization_code' => 'authorization_code'
+                     ),
+                     'multiple' => true
+                )
+            );
     }
 
     /**

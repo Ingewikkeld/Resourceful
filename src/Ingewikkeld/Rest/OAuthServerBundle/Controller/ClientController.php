@@ -4,7 +4,7 @@ namespace Ingewikkeld\Rest\OAuthServerBundle\Controller;
 
 use Hal\Resource;
 use Ingewikkeld\Rest\OAuthServerBundle\Resource\Mapper;
-use Ingewikkeld\Rest\OAuthServerBundle\Resource\Factory\Client as Factory;
+use Ingewikkeld\Rest\OAuthServerBundle\Resource\Provider\Client as Provider;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Ingewikkeld\Rest\OAuthServerBundle\Form\ClientType;
@@ -26,8 +26,8 @@ class ClientController
     /** @var FormFactoryInterface $formFactory */
     protected $formFactory;
 
-    /** @var Factory */
-    protected $resourceFactory;
+    /** @var Provider */
+    protected $resourceProvider;
 
     /** @var Mapper\Client  */
     protected $mapper;
@@ -36,17 +36,17 @@ class ClientController
      * Initializes this controller with a translator and Doctrine EntityManager.
      *
      * @param FormFactoryInterface $formFactory
-     * @param Factory              $resourceFactory
+     * @param Provider             $resourceProvider
      * @param Mapper\Client        $mapper
      */
     public function __construct(
         FormFactoryInterface $formFactory,
-        Factory              $resourceFactory,
+        Provider             $resourceProvider,
         Mapper\Client        $mapper
     ) {
-        $this->formFactory     = $formFactory;
-        $this->resourceFactory = $resourceFactory;
-        $this->mapper          = $mapper;
+        $this->formFactory      = $formFactory;
+        $this->resourceProvider = $resourceProvider;
+        $this->mapper           = $mapper;
     }
 
     /**
@@ -54,7 +54,7 @@ class ClientController
      */
     public function browseAction()
     {
-        return new Response((string)$this->resourceFactory->getCollection());
+        return new Response((string)$this->resourceProvider->getCollection());
     }
 
     /**
@@ -62,7 +62,7 @@ class ClientController
      */
     public function readAction(Request $request)
     {
-        return new Response((string)$this->resourceFactory->getResource($request->get('id')));
+        return new Response((string)$this->resourceProvider->getResource($request->get('id')));
     }
 
     /**
@@ -74,7 +74,7 @@ class ClientController
     {
         $formData = $this->validateAddAndEditRequestParameters($request);
 
-        $resource = $this->resourceFactory->getResource($request->get('id'));
+        $resource = $this->resourceProvider->getResource($request->get('id'));
         $resource->setData(
             array(
                 'redirectUris' => $formData['redirectUris'],
@@ -97,7 +97,7 @@ class ClientController
     {
         $resource = $this->mapper->create($this->validateAddAndEditRequestParameters($request));
 
-        return new Response('', 201, array('Location' => $this->resourceFactory->generateReadUrl($resource)));
+        return new Response('', 201, array('Location' => $this->resourceProvider->generateReadUrl($resource)));
     }
 
     /**
@@ -107,7 +107,7 @@ class ClientController
      */
     public function deleteAction(Request $request)
     {
-        $resource = $this->resourceFactory->getResource($request->get('id'));
+        $resource = $this->resourceProvider->getResource($request->get('id'));
 
         $this->mapper->delete($resource);
 
@@ -126,7 +126,7 @@ class ClientController
     protected function validateAddAndEditRequestParameters(Request $request)
     {
         $data = $request->request->all();
-        if ($data['id']) {
+        if (isset($data['id'])) {
             unset($data['id']);
         }
 

@@ -8,12 +8,13 @@ namespace Ingewikkeld\Rest\OAuthServerBundle\Resource\Mapper;
 use Doctrine\ORM\EntityManager;
 use Hal\Resource;
 use Ingewikkeld\Rest\OAuthServerBundle\Entity\Client as ClientEntity;
-use Ingewikkeld\Rest\OAuthServerBundle\Resource\Factory\Client as Factory;
+use Ingewikkeld\Rest\OAuthServerBundle\Resource\Provider\Client as Provider;
+use Ingewikkeld\Rest\Resource\MapperInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class Client
+class Client implements MapperInterface
 {
     /** @var EntityManager $entityManager */
     protected $entityManager;
@@ -21,24 +22,24 @@ class Client
     /** @var TranslatorInterface $translator */
     protected $translator;
 
-    /** @var Factory $factory */
-    protected $factory;
+    /** @var Provider $provider */
+    protected $provider;
 
     /**
      * Initializes this client mapper.
      *
      * @param EntityManager       $entityManager
      * @param TranslatorInterface $translator
-     * @param Factory             $factory
+     * @param Provider            $provider
      */
     public function __construct(
         EntityManager $entityManager,
         TranslatorInterface $translator,
-        Factory $factory
+        Provider $provider
     ) {
         $this->entityManager = $entityManager;
         $this->translator    = $translator;
-        $this->factory       = $factory;
+        $this->provider      = $provider;
     }
 
     /**
@@ -121,7 +122,7 @@ class Client
         $client = $objects['client'];
 
         $resource = new Resource(
-            $this->factory->generateReadUrl($client->getId()),
+            $this->provider->generateReadUrl($client->getId()),
             array(
                  'id'           => $client->getId(),
                  'publicId'     => $client->getPublicId(),

@@ -1,18 +1,19 @@
 <?php
 
-namespace Ingewikkeld\Rest\OAuthServerBundle\Resource\Factory;
+namespace Ingewikkeld\Rest\OAuthServerBundle\Resource\Provider;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Hal\Resource as HalResource;
 use Ingewikkeld\Rest\OAuthServerBundle\Entity\Client as ClientEntity;
 use Ingewikkeld\Rest\OAuthServerBundle\Resource\Mapper\Client as ClientMapper;
+use Ingewikkeld\Rest\Resource\ProviderInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class Client
+class Client implements ProviderInterface
 {
     protected $entityManager;
     protected $router;
@@ -48,7 +49,7 @@ class Client
         return $mapper->createResourceFromObjects(array('client' => $client));
     }
 
-    public function getCollection($options = array())
+    public function getCollection(array $options = array())
     {
         /** @var ClientEntity[] $collection */
         $collection = $this->getRepository()->findAll();
@@ -72,7 +73,7 @@ class Client
         return $this->router->generate(
             'ingewikkeld_rest_oauth_server_client_browse',
             array(),
-            UrlGeneratorInterface::RELATIVE_PATH
+            UrlGeneratorInterface::ABSOLUTE_PATH
         );
     }
 
@@ -86,17 +87,19 @@ class Client
     public function generateReadUrl($resourceOrIdentifier)
     {
         if ($resourceOrIdentifier instanceof HalResource) {
-            $data = $resourceOrIdentifier->getData();
+            $data = $resourceOrIdentifier->toArray();
             $id = $data['id'];
         } else {
             $id = $resourceOrIdentifier;
         }
 
-        return $this->router->generate(
+        $route = $this->router->generate(
             'ingewikkeld_rest_oauth_server_client_read',
             array('id' => $id),
-            UrlGeneratorInterface::RELATIVE_PATH
+            UrlGeneratorInterface::ABSOLUTE_PATH
         );
+
+        return $route;
     }
 
     /**
