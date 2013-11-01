@@ -1,11 +1,9 @@
 <?php
-/**
- * RestDistribution
- */
 
 namespace Ingewikkeld\Rest\OAuthServerBundle\ResourceMapper;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Hal\Resource;
 use Ingewikkeld\Rest\OAuthServerBundle\Entity\Client as ClientEntity;
 use Ingewikkeld\Rest\Resource\MapperInterface;
@@ -62,7 +60,7 @@ class Client implements MapperInterface
             );
         }
 
-        return $this->createResourceFromObjects(array('client' => $client));
+        return $this->createResourceFromClient($client);
     }
 
     /**
@@ -79,7 +77,7 @@ class Client implements MapperInterface
         $resource   = new Resource($this->generateBrowseUrl(), array('count' => count($collection)));
 
         foreach ($collection as $element) {
-            $resource->setEmbedded('client', $this->createResourceFromObjects(array('client' => $element)));
+            $resource->setEmbedded('client', $this->createResourceFromClient($element));
         }
 
         return $resource;
@@ -88,7 +86,7 @@ class Client implements MapperInterface
     /**
      * Creates a new Resource from the given parameters.
      *
-     * @param string[] $form
+     * @param FormInterface $form
      *
      * @return Resource
      */
@@ -104,13 +102,13 @@ class Client implements MapperInterface
         $this->entityManager->persist($client);
         $this->entityManager->flush();
 
-        return $this->createResourceFromObjects(array('client' => $client));
+        return $this->createResourceFromClient($client);
     }
 
     /**
      * Persists the resource to the storage engine.
      *
-     * @param Resource $resource
+     * @param \Hal\Resource $resource
      *
      * @throws NotFoundHttpException if no client with the given id could be found.
      *
@@ -137,7 +135,7 @@ class Client implements MapperInterface
     /**
      * Removes the Client from the database.
      *
-     * @param Resource $resource
+     * @param \Hal\Resource $resource
      *
      * @throws NotFoundHttpException if no client with the given id could be found.
      *
@@ -156,6 +154,14 @@ class Client implements MapperInterface
         $this->entityManager->remove($client);
     }
 
+    /**
+     * Populates the given resource with the values in the form; overwriting any existing items.
+     *
+     * @param \Hal\Resource $resource
+     * @param FormInterface $form
+     *
+     * @return void
+     */
     public function populateResourceWithForm(Resource $resource, FormInterface $form)
     {
         $formData = $form->getData();
@@ -208,17 +214,14 @@ class Client implements MapperInterface
     }
 
     /**
+     * Creates a new resource from the given Client entity.
      *
-     *
-     * @param object[] $objects
+     * @param ClientEntity $client
      *
      * @return Resource
      */
-    protected function createResourceFromObjects(array $objects)
+    protected function createResourceFromClient(ClientEntity $client)
     {
-        /** @var ClientEntity $client */
-        $client = $objects['client'];
-
         $resource = new Resource(
             $this->generateReadUrl($client->getId()),
             array(
@@ -234,7 +237,9 @@ class Client implements MapperInterface
     }
 
     /**
-     * @return \Doctrine\ORM\EntityRepository
+     * Finds and returns the Doctrine EntityRepository associated with the Client.
+     *
+     * @return EntityRepository
      */
     protected function getRepository()
     {

@@ -51,6 +51,7 @@ class User implements MapperInterface
      */
     public function getResource($identifier)
     {
+        /** @var UserEntity $user */
         $user = $this->userManager->findUserByUsername($identifier);
         if (!$user) {
             throw new NotFoundHttpException(
@@ -92,6 +93,7 @@ class User implements MapperInterface
     {
         $formData = $form->getData();
 
+        /** @var UserEntity $user */
         $user = $this->userManager->createUser();
         $user->setUsername($formData['username']);
         $user->setEmail($formData['email']);
@@ -105,7 +107,7 @@ class User implements MapperInterface
     /**
      * Persists the resource to the storage engine.
      *
-     * @param Resource $resource
+     * @param \Hal\Resource $resource
      *
      * @throws NotFoundHttpException if no user with the given id could be found.
      *
@@ -151,7 +153,7 @@ class User implements MapperInterface
     /**
      * Removes the User from the database.
      *
-     * @param Resource $resource
+     * @param \Hal\Resource $resource
      *
      * @throws NotFoundHttpException if no user with the given id could be found.
      *
