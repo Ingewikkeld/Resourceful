@@ -19,7 +19,7 @@
         <default key="_format">json</default>
         <requirement key="_format">xml|json</requirement>
     </route>
-    <route id="ingewikkeld_rest_oauth_server_client_add" path="/client" methods="POST">
+    <route id="ingewikkeld_rest_oauth_server_client_add" path="/client/" methods="POST">
         <default key="_controller">ingewikkeld_rest_oauth_server.controller.client:addAction</default>
         <default key="_format">json</default>
         <requirement key="_format">xml|json</requirement>
