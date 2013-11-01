@@ -37,7 +37,7 @@ class symfony-rest::httpd {
 
     apache::vhost { 'dev.rest.com':
         docroot       => '/var/www/symfony-rest',
-        server_name   => 'dev.rest.com'
+        server_name   => 'dev.rest.example.org'
     }
     file { '/var/www' :
         ensure => 'directory',

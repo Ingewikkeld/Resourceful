@@ -36,7 +36,7 @@ Installation instructions
 
    php app/console doctrine:schema:update --force
 
-Do not forget to add the URL 'dev.rest.com' to your hosts file; after the
+Do not forget to add the URL 'dev.rest.example.org' to your hosts file; after the
 installation has completed you can visit that location to see your REST API.
 
 Please see https://github.com/Ingewikkeld/symfony-rest-edition for more
