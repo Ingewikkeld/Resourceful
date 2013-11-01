@@ -11,14 +11,14 @@
     </parameters>
 
     <services>
-        <service id="ingewikkeld_rest_oauth_server.resource.formtype.client" class="ingewikkeld_rest_oauth_server.resource.formtype.client.class" />
+        <service id="ingewikkeld_rest_oauth_server.resource.formtype.client" class="%ingewikkeld_rest_oauth_server.resource.formtype.client.class%" />
         <service
             id="ingewikkeld_rest_oauth_server.resource.form.client"
             class="Symfony\Component\Form\Form"
             factory-service="form.factory"
             factory-method="create"
         >
-            <argument type="service">ingewikkeld_rest_oauth_server.resource.formtype.client</argument>
+            <argument type="service" id="ingewikkeld_rest_oauth_server.resource.formtype.client" />
         </service>
 
         <service id="ingewikkeld_rest_oauth_server.resource.mapper.client" class="%ingewikkeld_rest_oauth_server.resource.mapper.client.class%">

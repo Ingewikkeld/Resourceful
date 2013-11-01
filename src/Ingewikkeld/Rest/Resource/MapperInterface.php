@@ -15,7 +15,7 @@ interface MapperInterface
     /**
      * @param string[] $options
      *
-     * @return HalResource[]
+     * @return HalResource
      */
     public function getCollection(array $options = array());
 

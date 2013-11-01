@@ -2,11 +2,13 @@
 
 namespace Ingewikkeld\Rest\OAuthServerBundle\Controller;
 
+use Hal\Resource;
 use Ingewikkeld\Rest\Resource\MapperInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 class ClientController
 {
@@ -29,11 +31,18 @@ class ClientController
     }
 
     /**
+     * @param Request $request
+     *
      * @return Response
      */
-    public function browseAction()
+    public function browseAction(Request $request)
     {
-        return new Response((string)$this->mapper->getCollection());
+        $response = $this->convertResourceToPlainText(
+            $request->getRequestFormat('xml'),
+            $this->mapper->getCollection()
+        );
+
+        return new Response($response);
     }
 
     /**
@@ -43,7 +52,12 @@ class ClientController
      */
     public function readAction(Request $request)
     {
-        return new Response((string)$this->mapper->getResource($request->get('id')));
+        $response = $this->convertResourceToPlainText(
+            $request->getRequestFormat('xml'),
+            $this->mapper->getResource($request->get('id'))
+        );
+
+        return new Response($response);
     }
 
     /**
@@ -116,5 +130,31 @@ class ClientController
         }
 
         return $this->form->getData();
+    }
+
+    /**
+     * Converts the give HAL Resource to a plain text representation that can be returned in the response.
+     *
+     * @param string   $format
+     * @param Resource $resource
+     *
+     * @throws NotAcceptableHttpException
+     *
+     * @return string
+     */
+    protected function convertResourceToPlainText($format, Resource $resource)
+    {
+        switch ($format) {
+            case 'xml':
+                $response = $resource->getXML();
+
+                return $response;
+            case 'json':
+                $response = (string)$resource;
+
+                return $response;
+            default:
+                throw new NotAcceptableHttpException();
+        }
     }
 }
