@@ -23,7 +23,13 @@ class CreateClientCommand extends ContainerAwareCommand
         $this
             ->setName('oauth-server:create-client')
             ->setDescription('Creates a client for this oAuth server')
-            ->addOption('grants', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL, '', array('token', 'authorization_code'))
+            ->addOption(
+                'grants',
+                null,
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL,
+                '',
+                array('token', 'authorization_code')
+            )
             ->addArgument('redirectUris', InputArgument::IS_ARRAY | InputArgument::REQUIRED);
     }
 
