@@ -128,8 +128,8 @@ class Controller
     /**
      * Converts the give HAL Resource to a plain text representation that can be returned in the response.
      *
-     * @param string   $format
-     * @param Resource $resource
+     * @param string        $format
+     * @param \Hal\Resource $resource
      *
      * @throws NotAcceptableHttpException
      *
@@ -139,7 +139,7 @@ class Controller
     {
         switch ($format) {
             case 'xml':
-                return $resource->getXML();
+                return (string)$resource->getXML()->asXml();
             case 'json':
                 return (string)$resource;
             default:
