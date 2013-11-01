@@ -28,7 +28,6 @@ class AppKernel extends Kernel
             new Lunetics\LocaleBundle\LuneticsLocaleBundle(),
             new Ingewikkeld\Rest\OAuthServerBundle\IngewikkeldRestOAuthServerBundle(),
             new Ingewikkeld\Rest\UserBundle\IngewikkeldRestUserBundle(),
-            new Acme\RestDemoBundle\AcmeRestDemoBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
