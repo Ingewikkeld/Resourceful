@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
   # Networking
   config.vm.network "private_network", ip: "192.168.43.43"
   config.vm.network "forwarded_port",  guest: 80, host: 8080
-  config.vm.hostname = "dev.rest.com"
+  config.vm.hostname = "dev.rest.example.org"
   config.ssh.forward_agent = true
 
   config.vm.synced_folder "./", "/vagrant", id: "vagrant-root", nfs: (RUBY_PLATFORM =~ /linux/ or RUBY_PLATFORM =~ /darwin/)
