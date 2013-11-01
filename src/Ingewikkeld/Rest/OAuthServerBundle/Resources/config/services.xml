@@ -7,7 +7,7 @@
     <parameters>
         <parameter key="ingewikkeld_rest_oauth_server.resource.mapper.client.class">Ingewikkeld\Rest\OAuthServerBundle\ResourceMapper\Client</parameter>
         <parameter key="ingewikkeld_rest_oauth_server.resource.formtype.client.class">Ingewikkeld\Rest\OAuthServerBundle\Form\ClientType</parameter>
-        <parameter key="ingewikkeld_rest_oauth_server.controller.client.class">Ingewikkeld\Rest\OAuthServerBundle\Controller\ClientController</parameter>
+        <parameter key="ingewikkeld_rest_oauth_server.controller.client.class">Ingewikkeld\Rest\Resource\Controller</parameter>
     </parameters>
 
     <services>

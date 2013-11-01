@@ -1,16 +1,15 @@
 <?php
 
-namespace Ingewikkeld\Rest\OAuthServerBundle\Controller;
+namespace Ingewikkeld\Rest\Resource;
 
 use Hal\Resource;
-use Ingewikkeld\Rest\Resource\MapperInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
-class ClientController
+class Controller
 {
     /** @var FormInterface $formFactory */
     protected $form;
@@ -140,13 +139,9 @@ class ClientController
     {
         switch ($format) {
             case 'xml':
-                $response = $resource->getXML();
-
-                return $response;
+                return $resource->getXML();
             case 'json':
-                $response = (string)$resource;
-
-                return $response;
+                return (string)$resource;
             default:
                 throw new NotAcceptableHttpException();
         }
