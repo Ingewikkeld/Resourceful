@@ -2,6 +2,8 @@
 namespace Ingewikkeld\Rest\Resource;
 
 use Hal\Resource as HalResource;
+use Hal\Resource;
+use Symfony\Component\Form\FormInterface;
 
 interface MapperInterface
 {
@@ -20,11 +22,11 @@ interface MapperInterface
     public function getCollection(array $options = array());
 
     /**
-     * @param string[] $parameters
+     * @param FormInterface $parameters
      *
      * @return HalResource
      */
-    public function create(array $parameters);
+    public function create(FormInterface $form);
 
     /**
      * @param HalResource $resource
@@ -51,4 +53,6 @@ interface MapperInterface
      * @return string
      */
     public function generateReadUrl($resourceOrIdentifier);
-    }
+
+    public function populateResourceWithForm(Resource $resource, FormInterface $form);
+}

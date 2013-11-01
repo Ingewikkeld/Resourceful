@@ -67,16 +67,10 @@ class ClientController
      */
     public function editAction(Request $request)
     {
-        $formData = $this->validateAddAndEditRequestParameters($request);
-
+        $form     = $this->validateRequestParameters($request);
         $resource = $this->mapper->getResource($request->get('id'));
-        $resource->setData(
-            array(
-                'redirectUris' => $formData['redirectUris'],
-                'grants'       => $formData['grants']
-            )
-        );
 
+        $this->mapper->populateResourceWithForm($resource, $form);
         $this->mapper->update($resource);
 
         // returns an empty 200 (OK)
@@ -90,7 +84,7 @@ class ClientController
      */
     public function addAction(Request $request)
     {
-        $resource = $this->mapper->create($this->validateAddAndEditRequestParameters($request));
+        $resource = $this->mapper->create($this->validateRequestParameters($request));
 
         return new Response('', 201, array('Location' => $this->mapper->generateReadUrl($resource)));
     }
@@ -116,7 +110,7 @@ class ClientController
      *
      * @return FormInterface
      */
-    protected function validateAddAndEditRequestParameters(Request $request)
+    protected function validateRequestParameters(Request $request)
     {
         $data = $request->request->all();
         if (isset($data['id'])) {
@@ -129,7 +123,7 @@ class ClientController
             throw new BadRequestHttpException($this->form->getErrorsAsString());
         }
 
-        return $this->form->getData();
+        return $this->form;
     }
 
     /**

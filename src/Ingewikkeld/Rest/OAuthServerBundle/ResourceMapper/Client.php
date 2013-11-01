@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Hal\Resource;
 use Ingewikkeld\Rest\OAuthServerBundle\Entity\Client as ClientEntity;
 use Ingewikkeld\Rest\Resource\MapperInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -119,16 +120,18 @@ class Client implements MapperInterface
     /**
      * Creates a new Resource from the given parameters.
      *
-     * @param string[] $parameters
+     * @param string[] $form
      *
      * @return Resource
      */
-    public function create(array $parameters)
+    public function create(FormInterface $form)
     {
         $client = new ClientEntity();
 
-        $client->setRedirectUris($parameters['redirectUris']);
-        $client->setAllowedGrantTypes($parameters['grants']);
+        $formData = $form->getData();
+
+        $client->setRedirectUris($formData['redirectUris']);
+        $client->setAllowedGrantTypes($formData['grants']);
 
         $this->entityManager->persist($client);
         $this->entityManager->flush();
@@ -183,6 +186,16 @@ class Client implements MapperInterface
         }
 
         $this->entityManager->remove($client);
+    }
+
+    public function populateResourceWithForm(Resource $resource, FormInterface $form)
+    {
+        $resource->setData(
+             array(
+                 'redirectUris' => $formData['redirectUris'],
+                 'grants'       => $formData['grants']
+             )
+        );
     }
 
     /**
