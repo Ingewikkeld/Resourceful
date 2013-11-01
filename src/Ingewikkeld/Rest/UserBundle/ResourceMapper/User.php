@@ -41,11 +41,11 @@ class User implements MapperInterface
     }
 
     /**
+     * Returns a resource representation of the user with the given username.
      *
+     * @param string $identifier The username of the resource to retrieve.
      *
-     * @param string|integer $identifier
-     *
-     * @throws NotFoundHttpException if the user could not be found
+     * @throws NotFoundHttpException if the user could not be found.
      *
      * @return Resource
      */
@@ -61,6 +61,13 @@ class User implements MapperInterface
         return $this->createResourceFromUser($user);
     }
 
+    /**
+     * Returns all users in a single collection resource.
+     *
+     * @param string[] $options
+     *
+     * @return Resource
+     */
     public function getCollection(array $options = array())
     {
         /** @var UserEntity[] $collection */
@@ -72,45 +79,6 @@ class User implements MapperInterface
         }
 
         return $resource;
-    }
-
-    /**
-     * Generates the URL for browsing the collection of resources.
-     *
-     * @return string
-     */
-    public function generateBrowseUrl()
-    {
-        return $this->router->generate(
-            'ingewikkeld_rest_user_user_browse',
-            array(),
-            UrlGeneratorInterface::ABSOLUTE_PATH
-        );
-    }
-
-    /**
-     * Generate the URL for the read page for the given resource.
-     *
-     * @param Resource $resource
-     *
-     * @return string
-     */
-    public function generateReadUrl($resourceOrIdentifier)
-    {
-        if ($resourceOrIdentifier instanceof Resource) {
-            $data = $resourceOrIdentifier->toArray();
-            $id = $data['username'];
-        } else {
-            $id = $resourceOrIdentifier;
-        }
-
-        $route = $this->router->generate(
-            'ingewikkeld_rest_user_user_read',
-            array('id' => $id),
-            UrlGeneratorInterface::ABSOLUTE_PATH
-        );
-
-        return $route;
     }
 
     /**
@@ -161,6 +129,26 @@ class User implements MapperInterface
     }
 
     /**
+     * Populates the given resource with the values in the form; overwriting any existing items.
+     *
+     * @param \Hal\Resource $resource
+     * @param FormInterface $form
+     *
+     * @return void
+     */
+    public function populateResourceWithForm(Resource $resource, FormInterface $form)
+    {
+        $formData = $form->getData();
+
+        $resource->setData(
+             array(
+                 'username' => $formData['username'],
+                 'email'    => $formData['email']
+             )
+        );
+    }
+
+    /**
      * Removes the User from the database.
      *
      * @param Resource $resource
@@ -182,16 +170,43 @@ class User implements MapperInterface
         $this->userManager->deleteUser($user);
     }
 
-    public function populateResourceWithForm(Resource $resource, FormInterface $form)
+    /**
+     * Generates the URL for browsing the collection of resources.
+     *
+     * @return string
+     */
+    public function generateBrowseUrl()
     {
-        $formData = $form->getData();
-
-        $resource->setData(
-             array(
-                 'username' => $formData['username'],
-                 'email'    => $formData['email']
-             )
+        return $this->router->generate(
+            'ingewikkeld_rest_user_user_browse',
+            array(),
+            UrlGeneratorInterface::ABSOLUTE_PATH
         );
+    }
+
+    /**
+     * Generate the URL for the read page for the given resource.
+     *
+     * @param Resource|int|string $resourceOrIdentifier
+     *
+     * @return string
+     */
+    public function generateReadUrl($resourceOrIdentifier)
+    {
+        if ($resourceOrIdentifier instanceof Resource) {
+            $data = $resourceOrIdentifier->toArray();
+            $id = $data['username'];
+        } else {
+            $id = $resourceOrIdentifier;
+        }
+
+        $route = $this->router->generate(
+            'ingewikkeld_rest_user_user_read',
+            array('id' => $id),
+            UrlGeneratorInterface::ABSOLUTE_PATH
+        );
+
+        return $route;
     }
 
     /**

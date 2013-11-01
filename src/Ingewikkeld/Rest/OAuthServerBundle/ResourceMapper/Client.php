@@ -44,11 +44,11 @@ class Client implements MapperInterface
     }
 
     /**
-     *
+     * Returns the oAuth2 Client with the given identifier.
      *
      * @param string|integer $identifier
      *
-     * @throws NotFoundHttpException if the client could not be found
+     * @throws NotFoundHttpException if the client could not be found.
      *
      * @return Resource
      */
@@ -65,6 +65,13 @@ class Client implements MapperInterface
         return $this->createResourceFromObjects(array('client' => $client));
     }
 
+    /**
+     * Returns all clients in a single collection resource.
+     *
+     * @param string[] $options
+     *
+     * @return Resource
+     */
     public function getCollection(array $options = array())
     {
         /** @var ClientEntity[] $collection */
@@ -76,45 +83,6 @@ class Client implements MapperInterface
         }
 
         return $resource;
-    }
-
-    /**
-     * Generates the URL for browsing the collection of resources.
-     *
-     * @return string
-     */
-    public function generateBrowseUrl()
-    {
-        return $this->router->generate(
-            'ingewikkeld_rest_oauth_server_client_browse',
-            array(),
-            UrlGeneratorInterface::ABSOLUTE_PATH
-        );
-    }
-
-    /**
-     * Generate the URL for the read page for the given resource.
-     *
-     * @param Resource $resource
-     *
-     * @return string
-     */
-    public function generateReadUrl($resourceOrIdentifier)
-    {
-        if ($resourceOrIdentifier instanceof Resource) {
-            $data = $resourceOrIdentifier->toArray();
-            $id = $data['id'];
-        } else {
-            $id = $resourceOrIdentifier;
-        }
-
-        $route = $this->router->generate(
-            'ingewikkeld_rest_oauth_server_client_read',
-            array('id' => $id),
-            UrlGeneratorInterface::ABSOLUTE_PATH
-        );
-
-        return $route;
     }
 
     /**
@@ -190,12 +158,53 @@ class Client implements MapperInterface
 
     public function populateResourceWithForm(Resource $resource, FormInterface $form)
     {
+        $formData = $form->getData();
+
         $resource->setData(
              array(
                  'redirectUris' => $formData['redirectUris'],
                  'grants'       => $formData['grants']
              )
         );
+    }
+
+    /**
+     * Generates the URL for browsing the collection of resources.
+     *
+     * @return string
+     */
+    public function generateBrowseUrl()
+    {
+        return $this->router->generate(
+            'ingewikkeld_rest_oauth_server_client_browse',
+            array(),
+            UrlGeneratorInterface::ABSOLUTE_PATH
+        );
+    }
+
+    /**
+     * Generate the URL for the read page for the given resource.
+     *
+     * @param Resource|string|int $resourceOrIdentifier
+     *
+     * @return string
+     */
+    public function generateReadUrl($resourceOrIdentifier)
+    {
+        if ($resourceOrIdentifier instanceof Resource) {
+            $data = $resourceOrIdentifier->toArray();
+            $id = $data['id'];
+        } else {
+            $id = $resourceOrIdentifier;
+        }
+
+        $route = $this->router->generate(
+            'ingewikkeld_rest_oauth_server_client_read',
+            array('id' => $id),
+            UrlGeneratorInterface::ABSOLUTE_PATH
+        );
+
+        return $route;
     }
 
     /**
