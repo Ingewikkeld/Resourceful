@@ -3,7 +3,7 @@
  * Symfony REST Edition.
  *
  * @link      https://github.com/Ingewikkeld/symfony-rest-edition
- * @copyright Copyright (c) 2013-2013 Ingewikkeld
+ * @copyright Copyright (c) 2013-2013 Ingewikkeld<info@ingewikkeld.net>
  * @license   https://github.com/Ingewikkeld/symfony-rest-edition/blob/master/LICENSE MIT License
  */
 
@@ -108,11 +108,11 @@ class Controller
     }
 
     /**
-     *
+     * Takes the request parameters and passes them through the form associated with this controller.
      *
      * @param Request $request
      *
-     * @throws BadRequestHttpException
+     * @throws BadRequestHttpException if the request parameters could not be validated with the form.
      *
      * @return FormInterface
      */

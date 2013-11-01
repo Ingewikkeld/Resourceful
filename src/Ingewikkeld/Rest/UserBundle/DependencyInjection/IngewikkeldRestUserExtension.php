@@ -3,7 +3,7 @@
  * Symfony REST Edition.
  *
  * @link      https://github.com/Ingewikkeld/symfony-rest-edition
- * @copyright Copyright (c) 2013-2013 Ingewikkeld
+ * @copyright Copyright (c) 2013-2013 Ingewikkeld<info@ingewikkeld.net>
  * @license   https://github.com/Ingewikkeld/symfony-rest-edition/blob/master/LICENSE MIT License
  */
 
@@ -27,7 +27,7 @@ class IngewikkeldRestUserExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
+        $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');

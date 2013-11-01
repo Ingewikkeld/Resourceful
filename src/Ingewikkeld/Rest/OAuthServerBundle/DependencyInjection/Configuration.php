@@ -3,7 +3,7 @@
  * Symfony REST Edition.
  *
  * @link      https://github.com/Ingewikkeld/symfony-rest-edition
- * @copyright Copyright (c) 2013-2013 Ingewikkeld
+ * @copyright Copyright (c) 2013-2013 Ingewikkeld<info@ingewikkeld.net>
  * @license   https://github.com/Ingewikkeld/symfony-rest-edition/blob/master/LICENSE MIT License
  */
 
@@ -14,8 +14,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
  * This is the class that validates and merges configuration from your app/config files
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
  */
 class Configuration implements ConfigurationInterface
 {

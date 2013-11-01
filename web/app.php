@@ -3,11 +3,11 @@
  * Symfony REST Edition.
  *
  * @link      https://github.com/Ingewikkeld/symfony-rest-edition
- * @copyright Copyright (c) 2013-2013 Ingewikkeld
+ * @copyright Copyright (c) 2013-2013 Ingewikkeld<info@ingewikkeld.net>
  * @license   https://github.com/Ingewikkeld/symfony-rest-edition/blob/master/LICENSE MIT License
  */
 
-use Symfony\Component\ClassLoader\ApcClassLoader;
+//use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\HttpFoundation\Request;
 
 $loader = require_once __DIR__.'/../app/bootstrap.php.cache';
