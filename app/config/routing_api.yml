@@ -4,3 +4,6 @@ ingewikkeld_rest_user:
 
 ingewikkeld_rest_oauth_server:
     resource: "@IngewikkeldRestOAuthServerBundle/Resources/config/routing.xml"
+
+ingewikkeld_rest_user:
+    resource: "@IngewikkeldRestUserBundle/Resources/config/routing.xml"

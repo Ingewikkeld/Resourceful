@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes xmlns="http://symfony.com/schema/routing"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/routing
+        http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="ingewikkeld_rest_user_user_browse" path="/user/" methods="GET">
+        <default key="_controller">ingewikkeld_rest_user.controller.user:browseAction</default>
+        <default key="_format">json</default>
+        <requirement key="_format">xml|json</requirement>
+    </route>
+    <route id="ingewikkeld_rest_user_user_read" path="/user/{id}" methods="GET">
+        <default key="_controller">ingewikkeld_rest_user.controller.user:readAction</default>
+        <default key="_format">json</default>
+        <requirement key="_format">xml|json</requirement>
+    </route>
+    <route id="ingewikkeld_rest_user_user_edit" path="/user/{id}" methods="PUT">
+        <default key="_controller">ingewikkeld_rest_user.controller.user:editAction</default>
+        <default key="_format">json</default>
+        <requirement key="_format">xml|json</requirement>
+    </route>
+    <route id="ingewikkeld_rest_user_user_add" path="/user/" methods="POST">
+        <default key="_controller">ingewikkeld_rest_user.controller.user:addAction</default>
+        <default key="_format">json</default>
+        <requirement key="_format">xml|json</requirement>
+    </route>
+    <route id="ingewikkeld_rest_user_user_delete" path="/user/{id}" methods="DELETE">
+        <default key="_controller">ingewikkeld_rest_user.controller.user:deleteAction</default>
+        <default key="_format">json</default>
+        <requirement key="_format">xml|json</requirement>
+    </route>
+</routes>
+
