@@ -1,5 +1,12 @@
 #!/usr/bin/env php
 <?php
+/**
+ * Symfony REST Edition.
+ *
+ * @link      https://github.com/Ingewikkeld/symfony-rest-edition
+ * @copyright Copyright (c) 2013-2013 Ingewikkeld
+ * @license   https://github.com/Ingewikkeld/symfony-rest-edition/blob/master/LICENSE MIT License
+ */
 
 // if you don't want to setup permissions the proper way, just uncomment the following PHP line
 // read http://symfony.com/doc/current/book/installation.html#configuration-and-setup for more information
