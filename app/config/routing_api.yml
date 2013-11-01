@@ -3,5 +3,4 @@ ingewikkeld_rest_user:
     type:     annotation
 
 ingewikkeld_rest_oauth_server:
-    resource: "@IngewikkeldRestOAuthServerBundle/Controller/"
-    type:     annotation
+    resource: "@IngewikkeldRestOAuthServerBundle/Resources/config/routing.xml"

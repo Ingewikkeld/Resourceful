@@ -2,79 +2,60 @@
 
 namespace Ingewikkeld\Rest\OAuthServerBundle\Controller;
 
-use Hal\Resource;
-use Ingewikkeld\Rest\OAuthServerBundle\Resource\Mapper;
-use Ingewikkeld\Rest\OAuthServerBundle\Resource\Provider\Client as Provider;
+use Ingewikkeld\Rest\Resource\MapperInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Ingewikkeld\Rest\OAuthServerBundle\Form\ClientType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Put;
-use FOS\RestBundle\Controller\Annotations\Delete;
-
-/**
- * @Route("/client", service="ingewikkeld_rest_oauth_server.controller.client")
- */
 class ClientController
 {
-    /** @var FormFactoryInterface $formFactory */
-    protected $formFactory;
+    /** @var FormInterface $formFactory */
+    protected $form;
 
-    /** @var Provider */
-    protected $resourceProvider;
-
-    /** @var Mapper\Client  */
+    /** @var MapperInterface  */
     protected $mapper;
 
     /**
-     * Initializes this controller with a translator and Doctrine EntityManager.
+     * Initializes this controller with a translator and Resource DataMapper
      *
-     * @param FormFactoryInterface $formFactory
-     * @param Provider             $resourceProvider
-     * @param Mapper\Client        $mapper
+     * @param FormInterface   $form
+     * @param MapperInterface $mapper
      */
-    public function __construct(
-        FormFactoryInterface $formFactory,
-        Provider             $resourceProvider,
-        Mapper\Client        $mapper
-    ) {
-        $this->formFactory      = $formFactory;
-        $this->resourceProvider = $resourceProvider;
-        $this->mapper           = $mapper;
+    public function __construct(FormInterface $form, MapperInterface $mapper)
+    {
+        $this->form   = $form;
+        $this->mapper = $mapper;
     }
 
     /**
-     * @Get("/", name="ingewikkeld_rest_oauth_server_client_browse")
+     * @return Response
      */
     public function browseAction()
     {
-        return new Response((string)$this->resourceProvider->getCollection());
-    }
-
-    /**
-     * @Get("/{id}", name="ingewikkeld_rest_oauth_server_client_read")
-     */
-    public function readAction(Request $request)
-    {
-        return new Response((string)$this->resourceProvider->getResource($request->get('id')));
+        return new Response((string)$this->mapper->getCollection());
     }
 
     /**
      * @param Request $request
      *
-     * @Put("/{username}", name="ingewikkeld_rest_oauth_server_client_edit")
+     * @return Response
+     */
+    public function readAction(Request $request)
+    {
+        return new Response((string)$this->mapper->getResource($request->get('id')));
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response
      */
     public function editAction(Request $request)
     {
         $formData = $this->validateAddAndEditRequestParameters($request);
 
-        $resource = $this->resourceProvider->getResource($request->get('id'));
+        $resource = $this->mapper->getResource($request->get('id'));
         $resource->setData(
             array(
                 'redirectUris' => $formData['redirectUris'],
@@ -91,25 +72,23 @@ class ClientController
     /**
      * @param Request $request
      *
-     * @Post("/", name="ingewikkeld_rest_oauth_server_client_add")
+     * @return Response
      */
     public function addAction(Request $request)
     {
         $resource = $this->mapper->create($this->validateAddAndEditRequestParameters($request));
 
-        return new Response('', 201, array('Location' => $this->resourceProvider->generateReadUrl($resource)));
+        return new Response('', 201, array('Location' => $this->mapper->generateReadUrl($resource)));
     }
 
     /**
      * @param Request $request
      *
-     * @Delete("/{id}", name="ingewikkeld_rest_oauth_server_client_delete")
+     * @return Response
      */
     public function deleteAction(Request $request)
     {
-        $resource = $this->resourceProvider->getResource($request->get('id'));
-
-        $this->mapper->delete($resource);
+        $this->mapper->delete($this->mapper->getResource($request->get('id')));
 
         return new Response('', 204);
     }
@@ -131,12 +110,11 @@ class ClientController
         }
 
         // we explicitly do not load existing data; an edit is a PUT and should supply all valid data!
-        $form = $this->formFactory->create(new ClientType());
-        $form->submit($data);
-        if (!$form->isValid()) {
-            throw new BadRequestHttpException($form->getErrorsAsString());
+        $this->form->submit($data);
+        if (!$this->form->isValid()) {
+            throw new BadRequestHttpException($this->form->getErrorsAsString());
         }
 
-        return $form->getData();
+        return $this->form->getData();
     }
 }

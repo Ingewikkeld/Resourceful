@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes xmlns="http://symfony.com/schema/routing"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/routing
+        http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="ingewikkeld_rest_oauth_server_client_browse" path="/client" methods="GET">
+        <default key="_controller">ingewikkeld_rest_oauth_server.controller.client:browseAction</default>
+        <default key="_format">json</default>
+        <requirement key="_format">xml|json</requirement>
+    </route>
+    <route id="ingewikkeld_rest_oauth_server_client_read" path="/client/{id}" methods="GET">
+        <default key="_controller">ingewikkeld_rest_oauth_server.controller.client:readAction</default>
+        <default key="_format">json</default>
+        <requirement key="_format">xml|json</requirement>
+    </route>
+    <route id="ingewikkeld_rest_oauth_server_client_edit" path="/client/{id}" methods="PUT">
+        <default key="_controller">ingewikkeld_rest_oauth_server.controller.client:editAction</default>
+        <default key="_format">json</default>
+        <requirement key="_format">xml|json</requirement>
+    </route>
+    <route id="ingewikkeld_rest_oauth_server_client_add" path="/client" methods="POST">
+        <default key="_controller">ingewikkeld_rest_oauth_server.controller.client:addAction</default>
+        <default key="_format">json</default>
+        <requirement key="_format">xml|json</requirement>
+    </route>
+    <route id="ingewikkeld_rest_oauth_server_client_add" path="/client/{id}" methods="DELETE">
+        <default key="_controller">ingewikkeld_rest_oauth_server.controller.client:deleteAction</default>
+        <default key="_format">json</default>
+        <requirement key="_format">xml|json</requirement>
+    </route>
+</routes>
+
