@@ -17,6 +17,10 @@ use Mockery as m;
  */
 class UserTest extends \PHPUnit_Framework_TestCase
 {
+    const TEST_USERNAME = 'mvriel';
+    const TEST_EMAIL    = 'mike.vanriel@naenius.com';
+    const TEST_SELF_URL = 'mvriel.json';
+
     /** @var \Mockery\MockInterface|\FOS\UserBundle\Model\UserManagerInterface */
     protected $userManagerMock;
 
@@ -60,34 +64,17 @@ class UserTest extends \PHPUnit_Framework_TestCase
      */
     public function testRetrievingAUserResourceByItsUsername()
     {
-        $username  = 'mvriel';
-        $email     = 'mike.vanriel@naenius.com';
         $lastLogin = new \DateTime('2014-01-01');
-        $readUrl   = 'mvriel.json';
 
-        $user = m::mock('Ingewikkeld\Rest\UserBundle\Entity\User');
-        $user->shouldReceive('getUsernameCanonical')->andReturn($username);
-        $user->shouldReceive('getEmail')->andReturn($email);
-        $user->shouldReceive('getLastLogin')->andReturn($lastLogin);
-
-        $this->userManagerMock->shouldReceive('findUserByUsername')->with($username)->andReturn($user);
-        $this->routerMock->shouldReceive('generate')->andReturn($readUrl);
+        $user = $this->createUserMock(self::TEST_USERNAME, self::TEST_EMAIL, $lastLogin);
+        $this->userManagerMock->shouldReceive('findUserByUsername')->with(self::TEST_USERNAME)->andReturn($user);
+        $this->routerMock->shouldReceive('generate')->andReturn(self::TEST_SELF_URL);
 
         /** @var \Hal\Resource $resource */
-        $resource = $this->fixture->getResource($username);
+        $resource = $this->fixture->getResource(self::TEST_USERNAME);
 
         $this->assertInstanceOf('Hal\Resource', $resource);
-        $this->assertSame(
-            $resource->toArray(),
-            array(
-                '_links' => array(
-                    'self' => array ('href' => 'mvriel.json')
-                ),
-                'username'   => $username,
-                'email'      => $email,
-                'last_login' => $lastLogin->format('c'),
-            )
-        );
+        $this->assertSame($resource->toArray(), $this->createHalArrayForUser($lastLogin));
     }
 
     /**
@@ -96,11 +83,11 @@ class UserTest extends \PHPUnit_Framework_TestCase
      */
     public function testRetrievingANonExistingUserReturns404Exception()
     {
-        $username = 'unknownUser';
-        $this->userManagerMock->shouldReceive('findUserByUsername')->with($username)->andReturnNull();
-        $this->translatorMock->shouldReceive('trans')->with('error.user_not_found', array('%id%' => $username));
+        $this->userManagerMock->shouldReceive('findUserByUsername')->with(self::TEST_USERNAME)->andReturnNull();
+        $this->translatorMock
+            ->shouldReceive('trans')->with('error.user_not_found', array('%id%' => self::TEST_USERNAME));
 
-        $this->fixture->getResource($username);
+        $this->fixture->getResource(self::TEST_USERNAME);
     }
 
     /**
@@ -109,18 +96,10 @@ class UserTest extends \PHPUnit_Framework_TestCase
      */
     public function testRetrievingACollectionOfUserResources()
     {
-        $username  = 'mvriel';
-        $email     = 'mike.vanriel@naenius.com';
         $lastLogin = new \DateTime('2014-01-01');
-        $readUrl   = 'mvriel.json';
-
-        $user = m::mock('Ingewikkeld\Rest\UserBundle\Entity\User');
-        $user->shouldReceive('getUsernameCanonical')->andReturn($username);
-        $user->shouldReceive('getEmail')->andReturn($email);
-        $user->shouldReceive('getLastLogin')->andReturn($lastLogin);
-
+        $user      = $this->createUserMock(self::TEST_USERNAME, self::TEST_EMAIL, $lastLogin);
         $this->userManagerMock->shouldReceive('findUsers')->andReturn(array($user));
-        $this->routerMock->shouldReceive('generate')->andReturn($readUrl);
+        $this->routerMock->shouldReceive('generate')->andReturn(self::TEST_SELF_URL);
 
         /** @var \Hal\Resource $resource */
         $resource = $this->fixture->getCollection();
@@ -129,23 +108,98 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             $resource->toArray(),
             array(
-                '_links'    => array(
-                    'self' => array ('href' => 'mvriel.json')
-                ),
+                '_links'    => array('self' => array ('href' => self::TEST_SELF_URL)),
                 'count'     => 1,
-                '_embedded' => array(
-                    'user' => array(
-                        array(
-                            '_links' => array(
-                                'self' => array ('href' => 'mvriel.json')
-                            ),
-                            'username'   => $username,
-                            'email'      => $email,
-                            'last_login' => $lastLogin->format('c'),
-                        )
-                    )
-                )
+                '_embedded' => array('user' => array($this->createHalArrayForUser($lastLogin)))
             )
+        );
+    }
+
+    /**
+     * @covers Ingewikkeld\Rest\UserBundle\ResourceMapper\User::create
+     */
+    public function testCreateNewUserAndReturnResource()
+    {
+        $user = $this->createUserMock(self::TEST_USERNAME, self::TEST_EMAIL, null)->shouldIgnoreMissing();
+
+        $this->userManagerMock
+            ->shouldReceive('createUser')->andReturn($user)
+            ->shouldReceive('updateUser')->with($user);
+
+        $formMock = m::mock('Symfony\Component\Form\FormInterface');
+        $formMock->shouldReceive('getData')->andReturn(
+            array(
+                 'username' => self::TEST_USERNAME,
+                 'email'    => self::TEST_EMAIL,
+                 'password' => 'aPassword'
+            )
+        );
+        $this->routerMock->shouldReceive('generate')->andReturn(self::TEST_SELF_URL);
+
+        $resource = $this->fixture->create($formMock);
+
+        $this->assertInstanceOf('Hal\Resource', $resource);
+        $this->assertSame($resource->toArray(), $this->createHalArrayForUser(null));
+    }
+
+    /**
+     * @covers Ingewikkeld\Rest\UserBundle\ResourceMapper\User::update
+     */
+    public function testUpdateExistingUser()
+    {
+        $passwordString = 'aPassword';
+
+        $userArray = array_merge($this->createHalArrayForUser(null), array('password' => $passwordString));
+        $userMock  = m::mock('Hal\Resource')->shouldReceive('toArray')->andReturn($userArray)->getMock();
+
+        $userEntity = m::mock('Ingewikkeld\Rest\UserBundle\Entity\User')
+            ->shouldReceive('setUsername')->with(self::TEST_USERNAME)->getMock()
+            ->shouldReceive('setEmail')->with(self::TEST_EMAIL)->getMock()
+            ->shouldReceive('setPlainPassword')->with($passwordString)->getMock()
+            ->shouldReceive('setEnabled')->with(true)->getMock();
+
+        $this->userManagerMock
+            ->shouldReceive('findUserByUsername')->with(self::TEST_USERNAME)->andReturn($userEntity)
+            ->shouldReceive('updateUser')->with($userEntity);
+
+        $this->fixture->update($userMock);
+
+        $this->assertTrue(true);
+    }
+
+    /**
+     * Creates a mock user entity class with pre-filled data.
+     *
+     * @param string $username
+     * @param string $email
+     * @param \DateTime $lastLogin
+     *
+     * @return m\MockInterface
+     */
+    protected function createUserMock($username, $email, $lastLogin)
+    {
+        return m::mock('Ingewikkeld\Rest\UserBundle\Entity\User')
+                 ->shouldReceive('getUsernameCanonical')->andReturn($username)->getMock()
+                 ->shouldReceive('getEmail')->andReturn($email)->getMock()
+                 ->shouldReceive('getLastLogin')->andReturn($lastLogin)->getMock();
+    }
+
+    /**
+     * Creates an array representation to test HAL Resources with.
+     *
+     * @param \DateTime|null $lastLogin
+     *
+     * @return array
+     */
+    protected function createHalArrayForUser($lastLogin)
+    {
+        return array(
+            '_links'     => array(
+                'self' => array('href' => self::TEST_SELF_URL)
+            ),
+            'username'   => self::TEST_USERNAME,
+            'email'      => self::TEST_EMAIL,
+            'last_login' => $lastLogin ? $lastLogin->format('c') : null,
         );
     }
 }
