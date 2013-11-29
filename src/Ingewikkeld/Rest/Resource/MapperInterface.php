@@ -9,7 +9,6 @@
 
 namespace Ingewikkeld\Rest\Resource;
 
-
 interface MapperInterface extends Mapper\FetcherInterface, Mapper\PersistenceInterface, Mapper\UrlGeneratorInterface
 {
 }
