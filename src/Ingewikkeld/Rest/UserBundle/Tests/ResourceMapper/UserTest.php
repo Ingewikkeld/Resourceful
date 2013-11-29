@@ -218,14 +218,30 @@ class UserTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Ingewikkeld\Rest\UserBundle\ResourceMapper\User::generateBrowseUrl
      */
-    public function testGenerateUrlForResource()
+    public function testGenerateUrlForResourceWithResourceObject()
+    {
+        $resourceMock = m::mock('Hal\Resource')
+            ->shouldReceive('toArray')->andReturn(array('username' => self::TEST_USERNAME))->getMock();
+
+        $this->routerMock
+            ->shouldReceive('generate')
+            ->with('ingewikkeld_rest_user_user_read', array('id' => self::TEST_USERNAME), m::any())
+            ->andReturn('route');
+
+        $this->assertSame('route', $this->fixture->generateReadUrl($resourceMock));
+    }
+
+    /**
+     * @covers Ingewikkeld\Rest\UserBundle\ResourceMapper\User::generateBrowseUrl
+     */
+    public function testGenerateUrlForResourceWithUsername()
     {
         $this->routerMock
             ->shouldReceive('generate')
-            ->with('ingewikkeld_rest_user_user_browse', m::any(), m::any())
+            ->with('ingewikkeld_rest_user_user_read', array('id' => self::TEST_USERNAME), m::any())
             ->andReturn('route');
 
-        $this->assertSame('route', $this->fixture->generateBrowseUrl());
+        $this->assertSame('route', $this->fixture->generateReadUrl(self::TEST_USERNAME));
     }
 
     /**
@@ -235,7 +251,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
      * @param string $email
      * @param \DateTime $lastLogin
      *
-     * @return m\MockInterface
+     * @return m\MockInterface|\Ingewikkeld\Rest\UserBundle\Entity\User
      */
     protected function createUserMock($username, $email, $lastLogin)
     {
