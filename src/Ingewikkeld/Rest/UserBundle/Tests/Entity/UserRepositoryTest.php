@@ -11,5 +11,13 @@ namespace Ingewikkeld\Rest\UserBundle\Tests\Entity;
 
 class UserRepositoryTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * The user class currently does not feature any methods but we want this placeholder.
+     *
+     * Without this method the build will fail.
+     */
+    public function testPlaceholder()
+    {
 
+    }
 }
