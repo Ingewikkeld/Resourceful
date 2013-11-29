@@ -1,6 +1,19 @@
 Symfony REST Edition Distribution
 =================================
 
+The Symfony REST Edition Distribution is a ready-to-use 'Rapid API Development' (RAPID) setup to create
+a REST API with as little effort as possible.
+
+Features
+--------
+
+The Symfony REST Distribution comes with the following features out-of-the-box:
+
+- User management.
+- oAuth2 authorization and Client management.
+- i18n and language selection using the `Accept-Language` header (defaults to english).
+- Support for XML and JSON using the `Content-Type` and `Accepts` header.
+
 Installation instructions
 -------------------------
 
@@ -36,15 +49,8 @@ Installation instructions
 
    php app/console doctrine:schema:update --force
 
-Do not forget to add the URL 'dev.rest.example.org' to your hosts file; after the
-installation has completed you can visit that location to see your REST API.
+Do not forget to add the URL 'dev.rest.example.org' to your hosts file with IP 192.168.43.43.
+After the installation has completed you can visit that location to see your REST API.
 
-Please see https://github.com/Ingewikkeld/symfony-rest-edition for more
-information or read the documentation in the docs folder.
-
-
-TODO
-----
-
-* Replace caching folder directive with environment variable
-* Move logging to syslog
+Please see https://github.com/Ingewikkeld/symfony-rest-edition for more information or read the documentation in the
+docs folder.
