@@ -219,7 +219,7 @@ class User implements MapperInterface
     }
 
     /**
-     *
+     * Creates a resource object from the User entity.
      *
      * @param UserEntity $user
      *
