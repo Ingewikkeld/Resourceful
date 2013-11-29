@@ -163,8 +163,69 @@ class UserTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('updateUser')->with($userEntity);
 
         $this->fixture->update($userMock);
+    }
 
-        $this->assertTrue(true);
+    /**
+     * @covers Ingewikkeld\Rest\UserBundle\ResourceMapper\User::populateResourceWithForm
+     */
+    public function testPopulateResourceWithFormData()
+    {
+        $formMock = m::mock('Symfony\Component\Form\FormInterface')
+            ->shouldReceive('getData')->andReturn(
+                array(
+                     'username' => self::TEST_USERNAME,
+                     'email'    => self::TEST_EMAIL,
+                )
+            )->getMock();
+        $resourceMock = m::mock('Hal\Resource')
+            ->shouldReceive('setData')->with(
+                array(
+                     'username' => self::TEST_USERNAME,
+                     'email'    => self::TEST_EMAIL
+                )
+            )->getMock();
+
+        $this->fixture->populateResourceWithForm($resourceMock, $formMock);
+    }
+
+    /**
+     * @covers Ingewikkeld\Rest\UserBundle\ResourceMapper\User::delete
+     */
+    public function testDeleteUserFromDatabase()
+    {
+        $resourceMock = m::mock('Hal\Resource')
+            ->shouldReceive('toArray')->andReturn(array('username' => self::TEST_USERNAME))->getMock();
+        $user = $this->createUserMock(self::TEST_USERNAME, self::TEST_EMAIL, null);
+        $this->userManagerMock->shouldReceive('findUserByUsername')->with(self::TEST_USERNAME)->andReturn($user);
+        $this->userManagerMock->shouldReceive('deleteUser')->with($user);
+
+        $this->fixture->delete($resourceMock);
+    }
+
+    /**
+     * @covers Ingewikkeld\Rest\UserBundle\ResourceMapper\User::generateBrowseUrl
+     */
+    public function testGenerateUrlForCollection()
+    {
+        $this->routerMock
+            ->shouldReceive('generate')
+            ->with('ingewikkeld_rest_user_user_browse', m::any(), m::any())
+            ->andReturn('route');
+
+        $this->assertSame('route', $this->fixture->generateBrowseUrl());
+    }
+
+    /**
+     * @covers Ingewikkeld\Rest\UserBundle\ResourceMapper\User::generateBrowseUrl
+     */
+    public function testGenerateUrlForResource()
+    {
+        $this->routerMock
+            ->shouldReceive('generate')
+            ->with('ingewikkeld_rest_user_user_browse', m::any(), m::any())
+            ->andReturn('route');
+
+        $this->assertSame('route', $this->fixture->generateBrowseUrl());
     }
 
     /**
