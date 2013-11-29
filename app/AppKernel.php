@@ -58,6 +58,10 @@ class AppKernel extends Kernel
 
     public function getCacheDir()
     {
+        if (isset($_ENV['SF2_REST_CACHE_PATH'])) {
+            return $_ENV['SF2_REST_CACHE_PATH'];
+        }
+
         return '/tmp/rest/cache';
     }
 }

@@ -32,6 +32,11 @@ This file contains all the settings that you need to get up and running with a b
 * default locale
 * Secrets used to hash or encrypt data
 
+.. hint::
+
+   By default the Symfony REST Edition writes cache files to the ``/tmp/rest/cache`` folder; you can override this
+   behaviour by setting an environment variable called ``SF2_REST_CACHE_PATH`` with the new location for the cache.
+
 Setting up your database schema
 -------------------------------
 
