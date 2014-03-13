@@ -1,13 +1,13 @@
-Symfony REST Edition Distribution
-=================================
+Resourceful
+===========
 
-The Symfony REST Edition Distribution is a ready-to-use 'Rapid API Development' (RAPID) setup to create
+Resourceful is a ready-to-use Symfony2-based 'Rapid API Development' (RAPID) setup to create
 a REST API with as little effort as possible.
 
 Features
 --------
 
-The Symfony REST Distribution comes with the following features out-of-the-box:
+Resourceful comes with the following features out-of-the-box:
 
 - User management.
 - oAuth2 authorization and Client management.
@@ -19,7 +19,7 @@ Installation instructions
 
 1. Clone this repository:
 
-    git clone git@github.com:Ingewikkeld/symfony-rest-edition.git
+    git clone git@github.com:Ingewikkeld/Resourceful.git
 
 2. Load the submodules that Puppet uses:
 
@@ -52,5 +52,5 @@ Installation instructions
 Do not forget to add the URL 'dev.rest.example.org' to your hosts file with IP 192.168.43.43.
 After the installation has completed you can visit that location to see your REST API.
 
-Please see https://github.com/Ingewikkeld/symfony-rest-edition for more information or read the documentation in the
+Please see https://github.com/Ingewikkeld/Resourceful for more information or read the documentation in the
 docs folder.

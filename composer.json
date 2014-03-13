@@ -1,6 +1,6 @@
 {
-    "name": "ingewikkeld/framework-rest-edition",
-    "description": "The \"Symfony REST Edition\" distribution",
+    "name": "ingewikkeld/Resourceful",
+    "description": "Symfony2-based REST API setup",
     "autoload": {
         "psr-0": { "": "src/" }
     },
