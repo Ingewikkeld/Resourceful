@@ -1,6 +1,7 @@
 {
     "name": "ingewikkeld/resourceful",
     "description": "Symfony2-based REST API setup",
+    "license": "MIT",
     "autoload": {
         "psr-0": { "": "src/" }
     },
