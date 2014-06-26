@@ -25,11 +25,15 @@
         "friendsofsymfony/user-bundle":         "dev-master",
         "guzzle/guzzle":                        "~3.1",
         "keeguon/oauth2-php":                   ">=1.0.0",
+        "doctrine/migrations":                  "dev-master",
         "doctrine/doctrine-migrations-bundle":  "dev-master",
         "stof/doctrine-extensions-bundle":      "~1.1@dev",
         "zircote/hal":                          "dev-master",
         "friendsofsymfony/rest-bundle":         "dev-master",
-        "lunetics/locale-bundle":               "2.2.*"
+        "lunetics/locale-bundle":               "2.2.*",
+        "ingewikkeld/rest-user-bundle":         "dev-master",
+        "ingewikkeld/rest-oauth-server-bundle": "dev-master",
+        "ingewikkeld/rest-resource-bundle":     "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "0.8.*"
@@ -51,7 +55,6 @@
     "config": {
         "bin-dir": "bin"
     },
-    "minimum-stability": "alpha",
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web"
