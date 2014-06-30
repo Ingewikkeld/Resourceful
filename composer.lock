@@ -616,12 +616,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "46a031ddaea47d0685200027cfe8c83b02aee6f6"
+                "reference": "77d9ffeb4702a8d2daab2888869786b01e609e0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/46a031ddaea47d0685200027cfe8c83b02aee6f6",
-                "reference": "46a031ddaea47d0685200027cfe8c83b02aee6f6",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/77d9ffeb4702a8d2daab2888869786b01e609e0c",
+                "reference": "77d9ffeb4702a8d2daab2888869786b01e609e0c",
                 "shasum": ""
             },
             "require": {
@@ -668,7 +668,7 @@
                 "database",
                 "migrations"
             ],
-            "time": "2014-03-16 19:02:43"
+            "time": "2014-06-29 17:28:09"
         },
         {
             "name": "doctrine/orm",
@@ -1305,12 +1305,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ingewikkeld/oauth-server-bundle.git",
-                "reference": "2bd6277f65a1410304c04417c13e0cab6835dbc4"
+                "reference": "b5957414e57aeb2223d3b403aff4b108c10fd5cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ingewikkeld/oauth-server-bundle/zipball/2bd6277f65a1410304c04417c13e0cab6835dbc4",
-                "reference": "2bd6277f65a1410304c04417c13e0cab6835dbc4",
+                "url": "https://api.github.com/repos/Ingewikkeld/oauth-server-bundle/zipball/b5957414e57aeb2223d3b403aff4b108c10fd5cc",
+                "reference": "b5957414e57aeb2223d3b403aff4b108c10fd5cc",
                 "shasum": ""
             },
             "require": {
@@ -1335,7 +1335,7 @@
                 }
             ],
             "description": "A bundle that contains standard stuff for an OAuth server (for use with friendsofsymfony/oauth-server-bundle)",
-            "time": "2014-06-26 08:53:31"
+            "time": "2014-06-30 12:13:34"
         },
         {
             "name": "ingewikkeld/rest-resource-bundle",
@@ -1383,12 +1383,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ingewikkeld/rest-user-bundle.git",
-                "reference": "cebe1e0cac2cdf33d45881b084d964e9d6882fae"
+                "reference": "73acdeadc6098bea7256a7969536d7ba9c5afa5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ingewikkeld/rest-user-bundle/zipball/cebe1e0cac2cdf33d45881b084d964e9d6882fae",
-                "reference": "cebe1e0cac2cdf33d45881b084d964e9d6882fae",
+                "url": "https://api.github.com/repos/Ingewikkeld/rest-user-bundle/zipball/73acdeadc6098bea7256a7969536d7ba9c5afa5a",
+                "reference": "73acdeadc6098bea7256a7969536d7ba9c5afa5a",
                 "shasum": ""
             },
             "require": {
@@ -1413,7 +1413,7 @@
                 }
             ],
             "description": "Bundle with some default configurations for use with friendsofsymfony/user-bundle",
-            "time": "2014-06-26 08:41:22"
+            "time": "2014-06-30 12:14:12"
         },
         {
             "name": "jdorn/sql-formatter",
