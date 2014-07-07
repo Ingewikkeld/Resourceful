@@ -13,7 +13,7 @@ class symfony-rest {
     }
 
     package {
-        [ 'git', 'make', 'vim', 'wget', 'curl', 'augeas-tools', 'libaugeas-dev', 'libaugeas-ruby', 'bash-completion', 'libicu52', 'libicu-dev']:
+        [ 'git', 'make', 'vim', 'wget', 'curl', 'augeas-tools', 'libaugeas-dev', 'libaugeas-ruby', 'bash-completion', 'libicu52', 'libicu-dev', 'php5-intl']:
         ensure => present,
         require => File["dotdeb.list"]
     }
