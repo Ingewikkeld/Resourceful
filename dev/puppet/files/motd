@@ -1,0 +1,23 @@
+__________                                                _____     .__
+\______   \ ____   __________  __ _________   ____  _____/ ____\_ __|  |
+ |       _// __ \ /  ___/  _ \|  |  \_  __ \_/ ___\/ __ \   __\  |  \  |
+ |    |   \  ___/ \___ (  <_> )  |  /|  | \/\  \__\  ___/|  | |  |  /  |__
+ |____|_  /\___  >____  >____/|____/ |__|    \___  >___  >__| |____/|____/
+        \/     \/     \/                         \/    \/
+
+Installation instructions:
+
+1. Go to /vagrant
+
+   cd /vagrant
+
+3. Update database with schema
+
+   php app/console doctrine:schema:update --force
+
+Do not forget to add the URL 'local.resourceful.ingewikkeld.net' to your hosts file; after the
+installation has completed you can visit that location to see your REST API.
+
+Please see https://github.com/Ingewikkeld/Resourceful for more
+information or read the documentation in the docs folder.
+

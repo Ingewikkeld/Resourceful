@@ -1,38 +1,56 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant.configure("2") do |config|
+Vagrant.configure("2") do |baseconfig|
+    baseconfig.vm.define :"local.resourceful.ingewikkeld.net" do |config|
 
-  # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "trusty64"
-  config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+        config.vm.box = "ubuntu/trusty64"
 
-  # Networking
-  config.vm.network "private_network", ip: "192.168.43.43"
-  config.vm.network "forwarded_port",  guest: 80, host: 8080
-  config.vm.hostname = "dev.rest.example.org"
-  config.ssh.forward_agent = true
+        config.vm.hostname = 'local.resourceful.ingewikkeld.net'
+        config.vm.network "private_network", ip: "192.168.43.43"
+        config.ssh.forward_agent = true
 
-  config.vm.synced_folder "./", "/vagrant", id: "vagrant-root", nfs: (RUBY_PLATFORM =~ /linux/ or RUBY_PLATFORM =~ /darwin/)
+        config.vm.provider 'virtualbox' do |vb|
+            vb.name = config.vm.hostname
 
-  config.vm.provider :virtualbox do |vb|
-    # Use VBoxManage to customize the VM.
-    vb.customize [
-      'modifyvm', :id,
-        '--chipset', 'ich9', # solves kernel panic issue on some host machines
-        '--pae', 'on',
-        '--uart1', 'off',
-        '--memory', '2048'
-    ]
-  end
+            # Pass custom arguments to VBoxManage before booting VM
+            vb.customize [
+                'modifyvm', :id,
+                '--memory', '2048',
+                '--cpus', '2',
+                '--natdnshostresolver1', 'on',
+                '--natdnsproxy1', 'on',
+            ]
+        end
 
-  config.vm.provision :shell, :path => "puppet/init.sh"
-  config.vm.provision :puppet do |puppet|
-    puppet.manifests_path = "puppet/manifests"
-    puppet.module_path    = "puppet/modules"
-    puppet.manifest_file  = "symfony-rest.pp"
-    puppet.facter = {
-        'fqdn' => config.vm.hostname
-    }
-  end
+        if Vagrant.has_plugin?("vagrant-cachier")
+            config.cache.auto_detect = true
+        end
+        if Vagrant.has_plugin?("vagrant-hostsupdater")
+            config.hostsupdater.aliases = [
+                'local.resourceful.ingewikkeld.net',
+            ]
+        end
+
+        if Vagrant::VERSION < "1.4" then
+            config.vm.synced_folder ".", "/vagrant", :nfs => true
+        else
+            if Vagrant::Util::Platform.windows? then
+                config.vm.synced_folder ".", "/vagrant", mount_options: ['uid=`1000`','gid=33','dmode=0775','fmode=0764']
+            else
+                config.vm.synced_folder ".", "/vagrant", type: 'nfs', mount_options: ['rw', 'vers=3', 'tcp', 'fsc']
+            end
+        end
+
+        config.vm.provision :shell, :path => "dev/puppet/upgrade-puppet.sh"
+        config.vm.provision :shell, :path => "dev/puppet/librarian-puppet.sh"
+
+        config.vm.provision :puppet do |puppet|
+            puppet.manifests_path = "dev/puppet/manifests"
+            puppet.module_path = "dev/puppet/modules"
+            puppet.manifest_file = "default.pp"
+            # For debugging
+            # puppet.options = "--verbose --debug"
+        end
+    end
 end

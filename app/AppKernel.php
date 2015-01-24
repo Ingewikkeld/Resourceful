@@ -54,7 +54,7 @@ class AppKernel extends Kernel
 
     public function getLogDir()
     {
-        return '/var/log/symfony-rest';
+        return '/var/log/resourceful';
     }
 
     public function getCacheDir()
@@ -63,6 +63,6 @@ class AppKernel extends Kernel
             return $_ENV['SF2_REST_CACHE_PATH'];
         }
 
-        return '/tmp/rest/cache';
+        return '/tmp/resourceful/cache';
     }
 }

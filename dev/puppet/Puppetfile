@@ -1,0 +1,6 @@
+forge "https://forgeapi.puppetlabs.com"
+
+mod "example42/php"
+mod "example42/apache"
+mod "saz/timezone"
+mod "example42/mysql"

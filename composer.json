@@ -31,6 +31,9 @@
         "zircote/hal":                          "dev-master",
         "friendsofsymfony/rest-bundle":         "dev-master",
         "lunetics/locale-bundle":               "2.2.*",
+        "behat/behat":                          "3.0.*",
+        "behat/mink":                           "1.6.*",
+        "phpunit/phpunit":                      "4.6.*",
         "ingewikkeld/rest-user-bundle":         "dev-master",
         "ingewikkeld/rest-oauth-server-bundle": "dev-master",
         "ingewikkeld/rest-resource-bundle":     "dev-master"
