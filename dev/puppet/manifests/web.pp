@@ -22,18 +22,13 @@ class web {
 
     apache::module { "rewrite" : }
 
-# disable default vhost
     apache::vhost { 'default':
-        docroot     => '/var/www',
-        server_name => false,
+        docroot     => '/var/www/resourceful',
+        server_name => 'local.resourceful.ingewikkeld.net',
         priority    => '',
-        enable      => false
+        enable      => true
     }
 
-    apache::vhost { 'dev.rest.com':
-        docroot       => '/var/www/resourceful',
-        server_name   => 'dev.rest.example.org'
-    }
     file { '/var/www' :
         ensure => 'directory',
         owner => 'vagrant'
