@@ -1,0 +1,10 @@
+services:
+    ingewikkeld_resourceful_prototype.command.list:
+        class: Ingewikkeld\Resourceful\PrototypeBundle\Commands\ListHandler
+        tags:
+            - { name: tactician.handler, command: Ingewikkeld\Resourceful\PrototypeBundle\Commands\ListCommand }
+
+    ingewikkeld_resourceful_prototype.controller:
+        class: Ingewikkeld\Resourceful\PrototypeBundle\Controller\DefaultController
+        arguments:
+          - @tactician.commandbus

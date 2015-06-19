@@ -1,0 +1,15 @@
+ingewikkeld_resourceful_prototype_add:
+    path:     /proto/
+    defaults:
+        _controller: ingewikkeld_resourceful_prototype.controller:handleAction
+        command:     Ingewikkeld\Resourceful\PrototypeBundle\Commands\ListCommand
+    requirements:
+        _format: json
+
+ingewikkeld_resourceful_prototype_show:
+    path:     /proto/{id}
+    defaults:
+        _controller: ingewikkeld_resourceful_prototype.controller:handleAction
+        projection:  ingewikkeld_resourceful_prototype.projection.show
+    requirements:
+        _format: json

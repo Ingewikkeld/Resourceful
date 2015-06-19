@@ -1,6 +1,10 @@
-api:
-    resource: routing_api.yml
-    prefix:   /api
+ingewikkeld_resourceful_prototype:
+    resource: "@IngewikkeldResourcefulPrototypeBundle/Resources/config/routing.yml"
+    prefix:   /
+
+#api:
+#    resource: routing_api.yml
+#    prefix:   /api
 
 fos_oauth_server_token:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
