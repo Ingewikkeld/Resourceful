@@ -1,6 +1,6 @@
 <?php
 
-namespace Ingewikkeld\Resourceful\PrototypeBundle\Commands;
+namespace Ingewikkeld\ResourcefulBundle\Commands;
 
 use Webmozart\Assert\Assert;
 

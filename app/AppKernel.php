@@ -35,7 +35,7 @@ class AppKernel extends Kernel
             new Ingewikkeld\Rest\OAuthServerBundle\IngewikkeldRestOAuthServerBundle(),
             new Ingewikkeld\Rest\UserBundle\IngewikkeldRestUserBundle(),
             new Ingewikkeld\Rest\ResourceBundle\IngewikkeldRestResourceBundle(),
-            new Ingewikkeld\Resourceful\PrototypeBundle\IngewikkeldResourcefulPrototypeBundle(),
+            new Ingewikkeld\ResourcefulBundle\IngewikkeldResourcefulBundle(),
             new League\Tactician\Bundle\TacticianBundle(),
         );
 
@@ -43,6 +43,7 @@ class AppKernel extends Kernel
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
+            $bundles[] = new Ingewikkeld\Resourceful\Examples\SimpleBundle\IngewikkeldResourcefulExamplesSimpleBundle();
         }
 
         return $bundles;

@@ -1,0 +1,10 @@
+services:
+    ingewikkeld_resourceful_examples_simple.command.list:
+        class: Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands\ListHandler
+        tags:
+            - { name: resourceful.command, message: Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands\ListCommand }
+
+    ingewikkeld_resourceful_examples_simple.projection.show:
+        class: Ingewikkeld\Resourceful\Examples\SimpleBundle\Projections\Show
+        tags:
+            - { name: resourceful.projection, alias: example.simple.show }

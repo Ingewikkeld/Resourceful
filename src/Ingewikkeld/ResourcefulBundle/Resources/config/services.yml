@@ -1,0 +1,8 @@
+services:
+    resourceful.controller:
+        class: Ingewikkeld\ResourcefulBundle\Controller\DefaultController
+        arguments:
+          - @tactician.commandbus
+
+    resourceful.projection_factory:
+        class: Ingewikkeld\ResourcefulBundle\ProjectionFactory

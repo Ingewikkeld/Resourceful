@@ -1,0 +1,16 @@
+ingewikkeld_resourceful_example_simple_read:
+    path:     /example/simple/{id}
+    defaults:
+        _controller: resourceful.controller:handleAction
+        projection:  example.simple.show
+    requirements:
+        _format: json
+
+ingewikkeld_resourceful_example_simple_add:
+    path:     /example/simple
+    defaults:
+        _controller: resourceful.controller:handleAction
+        command:     Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands\ListCommand
+    requirements:
+        _format: json
+

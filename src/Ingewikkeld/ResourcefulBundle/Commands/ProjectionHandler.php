@@ -1,8 +1,8 @@
 <?php
 
-namespace Ingewikkeld\Resourceful\PrototypeBundle\Commands;
+namespace Ingewikkeld\ResourcefulBundle\Commands;
 
-use Ingewikkeld\Resourceful\PrototypeBundle\ProjectionFactory;
+use Ingewikkeld\ResourcefulBundle\ProjectionFactory;
 
 class Projector
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Ingewikkeld\Resourceful\PrototypeBundle\Commands;
+namespace Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands;
 
-use Ingewikkeld\Resourceful\PrototypeBundle\Command;
+use Ingewikkeld\ResourcefulBundle\Command;
 use Symfony\Component\HttpFoundation\Request;
 
 class ListCommand implements Command

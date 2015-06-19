@@ -1,10 +1,10 @@
 <?php
 
-namespace Ingewikkeld\Resourceful\PrototypeBundle\Controller;
+namespace Ingewikkeld\ResourcefulBundle\Controller;
 
 use Hal\Resource;
-use Ingewikkeld\Resourceful\PrototypeBundle\Command;
-use Ingewikkeld\Resourceful\PrototypeBundle\Commands\ProjectionCommand;
+use Ingewikkeld\ResourcefulBundle\Command;
+use Ingewikkeld\ResourcefulBundle\Commands\ProjectionCommand;
 use League\Tactician\CommandBus;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Ingewikkeld\Resourceful\PrototypeBundle;
+namespace Ingewikkeld\ResourcefulBundle;
 
 use Symfony\Component\HttpFoundation\Request;
 

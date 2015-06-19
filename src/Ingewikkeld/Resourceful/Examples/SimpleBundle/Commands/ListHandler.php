@@ -1,6 +1,6 @@
 <?php
 
-namespace Ingewikkeld\Resourceful\PrototypeBundle\Commands;
+namespace Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands;
 
 class ListHandler
 {

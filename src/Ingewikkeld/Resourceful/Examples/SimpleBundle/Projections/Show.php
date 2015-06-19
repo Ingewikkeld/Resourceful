@@ -1,9 +1,9 @@
 <?php
 
-namespace Ingewikkeld\Resourceful\PrototypeBundle\Projections;
+namespace Ingewikkeld\Resourceful\Examples\SimpleBundle\Projections;
 
 use Hal\Resource;
-use Ingewikkeld\Resourceful\PrototypeBundle\Projection;
+use Ingewikkeld\ResourcefulBundle\Projection;
 
 class Show implements Projection
 {
