@@ -22,7 +22,6 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
-            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\AopBundle\JMSAopBundle(),
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
@@ -36,12 +35,15 @@ class AppKernel extends Kernel
             new Ingewikkeld\Rest\OAuthServerBundle\IngewikkeldRestOAuthServerBundle(),
             new Ingewikkeld\Rest\UserBundle\IngewikkeldRestUserBundle(),
             new Ingewikkeld\Rest\ResourceBundle\IngewikkeldRestResourceBundle(),
+            new Ingewikkeld\ResourcefulBundle\IngewikkeldResourcefulBundle(),
+            new League\Tactician\Bundle\TacticianBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
+            $bundles[] = new Ingewikkeld\Resourceful\Examples\SimpleBundle\IngewikkeldResourcefulExamplesSimpleBundle();
         }
 
         return $bundles;

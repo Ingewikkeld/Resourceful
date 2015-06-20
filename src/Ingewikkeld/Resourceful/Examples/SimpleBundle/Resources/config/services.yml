@@ -1,0 +1,13 @@
+parameters:
+    resourceful_examples_simple.message.add: Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands\AddCommand
+
+services:
+    resourceful_examples_simple.command.add:
+        class: Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands\AddHandler
+        tags:
+            - { name: resourceful.command, message: %resourceful_examples_simple.message.add% }
+
+    resourceful_examples_simple.projection.show:
+        class: Ingewikkeld\Resourceful\Examples\SimpleBundle\Projections\Show
+        tags:
+            - { name: resourceful.projection, alias: example.simple.show }

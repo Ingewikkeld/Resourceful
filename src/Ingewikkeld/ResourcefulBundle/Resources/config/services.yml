@@ -1,0 +1,20 @@
+services:
+    resourceful.command.projection:
+        class: Ingewikkeld\ResourcefulBundle\Commands\ProjectionHandler
+        arguments:
+                - @resourceful.projection_factory
+        tags:
+            - { name: resourceful.command, message: Ingewikkeld\ResourcefulBundle\Commands\ProjectionCommand }
+
+    resourceful.controller:
+        class: Ingewikkeld\ResourcefulBundle\Controller\DefaultController
+        arguments:
+          - @resourceful.api_kernel
+
+    resourceful.api_kernel:
+        class: Ingewikkeld\ResourcefulBundle\ApiKernel
+        arguments:
+          - @tactician.commandbus
+
+    resourceful.projection_factory:
+        class: Ingewikkeld\ResourcefulBundle\ProjectionFactory

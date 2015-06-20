@@ -1,3 +1,11 @@
+# Example bundles
+
+ingewikkeld_resourceful_examples_simple:
+    resource: "@IngewikkeldResourcefulExamplesSimpleBundle/Resources/config/routing.yml"
+    prefix:   /
+
+# Symfony routes
+
 _wdt:
     resource: "@WebProfilerBundle/Resources/config/routing/wdt.xml"
     prefix:   /_wdt
@@ -9,6 +17,8 @@ _profiler:
 _configurator:
     resource: "@SensioDistributionBundle/Resources/config/routing/webconfigurator.xml"
     prefix:   /_configurator
+
+# Normal routing
 
 _main:
     resource: routing.yml
