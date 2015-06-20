@@ -1,16 +1,32 @@
-ingewikkeld_resourceful_example_simple_read:
-    path:     /example/simple/{id}
+ingewikkeld_resourceful_example_simple_browse:
+    path:     /example/simple
+    methods: [ GET ]
     defaults:
         _controller: resourceful.controller:handleAction
+        accepts:
+            - mime_type:  vnd.resourceful.example.collection.mobile
+              projection: example.simple.mobile_collection
+            - mime_type:  vnd.resourceful.example.collection
+              projection: example.simple.collection
+    requirements:
+        _format: json
+
+ingewikkeld_resourceful_example_simple_read:
+    path:     /example/simple/{id}
+    methods: [ GET ]
+    defaults:
+        _controller: resourceful.controller:handleAction
+        accepts:     vnd.resourceful.example
         projection:  example.simple.show
     requirements:
         _format: json
 
 ingewikkeld_resourceful_example_simple_add:
     path:     /example/simple
+    methods: [ POST ]
     defaults:
         _controller: resourceful.controller:handleAction
-        command:     Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands\ListCommand
+        command:     Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands\AddCommand
     requirements:
         _format: json
 

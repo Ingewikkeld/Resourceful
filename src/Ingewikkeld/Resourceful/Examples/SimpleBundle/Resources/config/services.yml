@@ -1,10 +1,13 @@
-services:
-    ingewikkeld_resourceful_examples_simple.command.list:
-        class: Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands\ListHandler
-        tags:
-            - { name: resourceful.command, message: Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands\ListCommand }
+parameters:
+    resourceful_examples_simple.message.add: Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands\AddCommand
 
-    ingewikkeld_resourceful_examples_simple.projection.show:
+services:
+    resourceful_examples_simple.command.add:
+        class: Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands\AddHandler
+        tags:
+            - { name: resourceful.command, message: %resourceful_examples_simple.message.add% }
+
+    resourceful_examples_simple.projection.show:
         class: Ingewikkeld\Resourceful\Examples\SimpleBundle\Projections\Show
         tags:
             - { name: resourceful.projection, alias: example.simple.show }

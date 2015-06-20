@@ -4,7 +4,7 @@ namespace Ingewikkeld\ResourcefulBundle\Commands;
 
 use Ingewikkeld\ResourcefulBundle\ProjectionFactory;
 
-class Projector
+class ProjectionHandler
 {
     /**
      * @var ProjectionFactory

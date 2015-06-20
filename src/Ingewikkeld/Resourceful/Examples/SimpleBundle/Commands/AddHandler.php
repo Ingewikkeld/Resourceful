@@ -2,9 +2,9 @@
 
 namespace Ingewikkeld\Resourceful\Examples\SimpleBundle\Commands;
 
-class ListHandler
+class AddHandler
 {
-    public function handle(ListCommand $command)
+    public function handle(AddCommand $command)
     {
         $response = new \Hal\Resource(
             '/api',

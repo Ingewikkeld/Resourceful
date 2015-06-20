@@ -11,9 +11,8 @@ class ProjectionCommand
 
     /** @var string */
     private $name;
-    /**
-     * @var array
-     */
+
+    /** @var array */
     private $options;
 
     public function __construct($url, $name, array $options = [])
